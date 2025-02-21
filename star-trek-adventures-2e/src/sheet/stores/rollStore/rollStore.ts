@@ -161,11 +161,12 @@ export const useRollStore = defineStore("roll", () => {
     const {results} = await dispatch.roll({rolls: {
       "roll": `${dice}d20<${targetNumber.value}cs<${1+crit}`}})
 
-    // Prepare for rolltemplate and classes for crit success and faileur
+    // Prepare for rolltemplate and classes for crit success and failure
+    // NB: This does not take into account "Complication Range", where crit fails range increase, e.g. include 19-20 results.
     type RollResult = { roll: number; class: string; }  
     const rollResult:RollResult[] = [];
     (results.roll.results.dice)?.forEach((roll) => {
-      console.log(`Die: ${roll}`)
+      //console.log(`Die: ${roll}`)
       const critClass = (roll == 1) ? "critical-success" : 
                         (activeStats.focus.length > 0 && roll <= crit) ? "critical-success" : 
                         (roll == 20) ? "critical-failure" : "no-crit" ; 
