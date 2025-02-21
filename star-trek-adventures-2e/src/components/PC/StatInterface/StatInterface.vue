@@ -3,8 +3,9 @@
     v-if="!editing"
     class="stat-view"
     :class="`stat-view--${stat.toLowerCase()}`" 
-    @click="setActiveToStat()"
+    @click="rollStore.addDie(stat)"
   >
+    <!-- @click="setActiveToStat()" -->
     <label
       class="stat-view__label"
       :for="`stat-view-${stat.toLowerCase()}`"
@@ -142,7 +143,8 @@ const setModifyingToStat = () => {
 
 const setActiveToStat = () => {
   if (isAttribute) rollStore.activeStats.attribute = stat;
-  else if (isDepartment) rollStore.activeStats.department = stat;
+  else if (isDepartment) rollStore.activeStats.department = stat;  
+  rollStore.activeStats.baseDice++; 
 };
 
 const reference = ref(null);

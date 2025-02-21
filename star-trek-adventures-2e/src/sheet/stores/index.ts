@@ -84,7 +84,6 @@ export const useStarTrekStore = defineStore('StarTrek', () => {
     stores.meta.campaignId = campaignId;
   };
 
-
   return {
     ...stores,
     storeRegistry,

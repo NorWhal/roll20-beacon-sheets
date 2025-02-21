@@ -21,6 +21,7 @@ import {
 } from './handlers/handlers';
 import { type GMAttr, gmAttrs } from './computed/gm';
 import { useStarTrekStore } from '@/sheet/stores';
+import { reRollAll } from '@/sheet/stores/rollStore/rollStore'
 import { updateGMResources } from '@/sheet/stores/gmStore/gmStore';
 
 /* 
@@ -44,9 +45,27 @@ const relayConfig = {
       See /src/rolltemplates/partials/heroDie.hbs for an example of how an action is performed.
       This one rolls 1d6, adds the result to a previous roll, and then prints the new result.
       Check out Marvel Multiverse RPG Edges for a more complex example.
-      ⭐ An important note is that the actions will not have access to any of the Pinia stores, so they need to be passed the necessary data or have access to it through the passed in character object.
+      ⭐ An important note is that the actions will not have access to any of 
+      the Pinia stores, so they need to be passed the necessary data or have 
+      access to it through the passed in character object.
      */
-
+    reRollAll: {
+      method: async (
+        props: {
+          dispatch: Dispatch;
+          character: Character;
+          messageId?: string;
+          dice?: Number;
+        },
+        ...args:string[]
+      ): Promise<void> => {
+        console.log(`In reRollAll function`);
+        console.log(`Reroll function arguments: ${JSON.stringify(args)}`);
+        console.log(`Reroll function props: ${JSON.stringify(props)}`);
+        const [characterName] = args;
+        return reRollAll(props);
+      },
+    },
   },
   computed: {
     ...gmAttrs(),

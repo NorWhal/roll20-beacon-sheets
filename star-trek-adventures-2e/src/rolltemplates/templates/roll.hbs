@@ -1,9 +1,15 @@
-{{#> postWrapper type="roll" characterName=characterName bottomBarValues=bottomBarValues rollTile=rollTitle}}
+{{#> postWrapper type="roll" characterName=characterName bottomBarValues=bottomBarValues rollTitle=rollTitle rollResult=rollResult critlevel=critlevel}}
   <div class="roll">
-    <ul class="roll__dice-results">
+    {{!-- <ul class="roll__dice-results">
       {{#each dice}}
         <li>{{this}}</li>
       {{/each}}
-    </ul>
+    </ul> --}}
+    {{!-- <ul><li>{{critlevel}}</li></ul> --}}
+    <ul class="roll__dice-results">
+      {{#each rollResult}}
+        <li class="{{this.class}}">{{this.roll}}</li>
+      {{/each}}
+    </ul>   
   </div>
 {{/ postWrapper }}

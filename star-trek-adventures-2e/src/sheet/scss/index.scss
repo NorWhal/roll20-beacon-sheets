@@ -1,3 +1,5 @@
+
+@use "./variables.scss";
 @use "./components/switch.scss";
 @use "./pcLayout.scss";
 @use "./generics.scss";
@@ -8,10 +10,12 @@ html {
   font-size: 16px;
   font-family: "Orbitron"
 }
-
 body {
   max-width: 100%;
   height: min-content;
   overflow-x: hidden;
+}
+.sheet-logo img {
+  height: 2rem;
 }
 

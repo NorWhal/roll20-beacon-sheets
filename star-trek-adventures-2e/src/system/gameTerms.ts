@@ -1,3 +1,4 @@
+// region Attributes
 export const AttributesEnum = {
   CONTROL: 'Control',
   FITNESS: 'Fitness',
@@ -16,6 +17,7 @@ export const AttributeValues = Object.values(AttributesEnum) as AttributeValue[]
 export const isAttributeValue = (value: string): value is AttributeValue =>
   AttributeValues.includes(value as AttributeValue);
 
+// region Departments
 export const DepartmentsEnum = {
   COMMAND: 'Command',
   ENGINEERING: 'Engineering',
@@ -34,6 +36,21 @@ export const DepartmentValues = Object.values(DepartmentsEnum) as DepartmentValu
 export const isDepartmentValue = (value: string): value is DepartmentValue =>
   DepartmentValues.includes(value as DepartmentValue);
 
+// region Conditions 
+export const ConditionsEnum = {
+  DETERMINATION: 'Determination',
+  STRESS: 'Stress',
+} as const;
+export type ConditionsKey = keyof typeof ConditionsEnum;
+export const ConditionsKeys = Object.keys(ConditionsEnum) as ConditionsKey[];
+export const isConditionsKey = (key: string): key is ConditionsKey => key in ConditionsEnum;
+
+export type ConditionsValue = (typeof ConditionsEnum)[ConditionsKey];
+export const ConditionsValues = Object.values(ConditionsEnum) as ConditionsValue[];
+export const isConditionsValue = (value: string): value is ConditionsValue =>
+  ConditionsValues.includes(value as ConditionsValue);
+
+// region Advancement
 const AdvancementTypesEnum = {
   LOG: 'Log',
   MILESTONE: 'Milestone',

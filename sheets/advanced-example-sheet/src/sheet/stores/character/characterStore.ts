@@ -211,6 +211,7 @@ export const useCharacterStore = defineStore('character', () => {
  *  */
 export const addHeroDie = async (props: any, originalResult: number, originalTitle: string) => {
   // This follow-up roll subtracts 1 hero die then adds the result of 1d6 to the previous roll and re-posts the new total.
+  console.log(`AAddinh hero die! With props: ${JSON.stringify(props)}`);
   const heroDiceCurrent = props?.character?.attributes?.character?.character?.heroDiceCurrent || -1;
   if (heroDiceCurrent < 0) {
     await sendToChat(

@@ -3,8 +3,13 @@ import Handlebars from "handlebars";
 import rollPostTemplate from "./templates/roll.hbs?raw"
 
 import postWrapper from "./partials/postWrapper.hbs?raw"
+import { when } from './helpers/when';
 
 Handlebars.registerPartial("postWrapper", postWrapper)
+Handlebars.registerHelper('when', when);
+Handlebars.registerHelper('_toInt', function(str) {
+  return parseInt(str,10);
+});
 
 const postTemplates = {
   roll: Handlebars.compile(rollPostTemplate)
@@ -12,6 +17,7 @@ const postTemplates = {
 
 type CommonParams = {
   characterName: string;
+  characterId: string;
 }
 
 type RollPost = {
@@ -20,6 +26,8 @@ type RollPost = {
     rollTitle: string,
     bottomBarValues: string[],
     dice?: number[],
+    rollResult?: any,
+    critlevel?: number,
   }
 };
 

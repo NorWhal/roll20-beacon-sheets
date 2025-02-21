@@ -3,6 +3,8 @@ import type {
   AttributeValue,
   DepartmentKey,
   DepartmentValue,
+  ConditionsKey,
+  ConditionsValue
 } from '@/system/gameTerms';
 import {
   AttributesEnum,
@@ -11,10 +13,14 @@ import {
   isAttributeValue,
   isDepartmentKey,
   isDepartmentValue,
+  ConditionsEnum,
+  isConditionsKey,
+  isConditionsValue,
+  ConditionsKeys
 } from '@/system/gameTerms';
 import { type ModifierKey, ModifierOperations } from '@/system/logicTerms';
 import { defineStore } from 'pinia';
-import { computed, reactive, toRaw } from 'vue';
+import { ref, computed, reactive, toRaw } from 'vue';
 
 export type MessageModifier = {
   note?: string;
@@ -27,7 +33,7 @@ export type StatModifier = {
 };
 
 export type StatField = {
-  label: AttributeValue | DepartmentValue;
+  label: AttributeValue | DepartmentValue | ConditionsValue;
   base: number;
   modifiers?: StatModifier[];
 };
@@ -53,6 +59,18 @@ export type DepartmentDictionary = {
   -readonly [Key in keyof typeof DepartmentsEnum]: DepartmentField & {
     label: (typeof DepartmentsEnum)[Key];
   };
+};
+
+export type ConditionsField = StatField & {
+  label: ConditionsValue;
+};
+const isConditionsField = (stat: StatField): stat is ConditionsField => 
+  isConditionsValue(stat.label);
+
+export type ConditionsDictionary = {
+  -readonly [Key in keyof typeof ConditionsEnum]: ConditionsField & {
+    label: (typeof ConditionsEnum)[Key];
+  }
 };
 
 export const useStatsStore = defineStore('stats', () => {
@@ -148,29 +166,52 @@ export const useStatsStore = defineStore('stats', () => {
   const MEDICINE = computed(() => calculateDepartment('MEDICINE'));
   const SCIENCE = computed(() => calculateDepartment('SCIENCE'));
 
+  // region Conditions
+  const conditionsFields = reactive<ConditionsDictionary>({
+    DETERMINATION: {
+      label: ConditionsEnum.DETERMINATION,
+      base: 0,
+    },
+    STRESS: {
+      label: ConditionsEnum.STRESS,
+      base: 0,
+    }
+  });
+  const calculateCondition = (condition: ConditionsKey): number => {
+    return conditionsFields[condition].base; 
+  };
+  const DETERMINATION = computed(() => calculateCondition('DETERMINATION'));
+  const STRESS = computed(() => calculateCondition('STRESS'));
+
+  // region Hydration
   const dehydrate = () => {
     return {
       ...toRaw(attributeFields),
       ...toRaw(departmentFields),
+      ...toRaw(conditionsFields)
     };
   };
 
-  const hydrate = (hydrateStore: Record<AttributeKey | DepartmentKey, StatField>) => {
+  const hydrate = (hydrateStore: Record<AttributeKey | DepartmentKey | ConditionsKey, StatField>) => {
     const attributes: Partial<AttributeDictionary> = {};
     const departments: Partial<DepartmentDictionary> = {};
+    const conditions: Partial<ConditionsDictionary> = {};
     for (const [key, field] of Object.entries(hydrateStore)) {
       if (isAttributeKey(key) && isAttributeField(field)) {
         (attributes[key] as AttributeDictionary[typeof key]) = field;
       } else if (isDepartmentKey(key) && isDepartmentField(field)) {
         (departments[key] as DepartmentDictionary[typeof key]) = field;
+      } else if (isConditionsKey(key) && isConditionsField(field)) {
+        (conditions[key] as ConditionsDictionary[typeof key]) = field;
       } else {
         console.error('Invalid Stat: ', key);
         console.table(toRaw(field));
       }
-    }
+    }    
 
     Object.assign(attributeFields, attributes);
     Object.assign(departmentFields, departments);
+    Object.assign(conditionsFields, conditions);
   };
 
   return {
@@ -188,6 +229,11 @@ export const useStatsStore = defineStore('stats', () => {
     SECURITY,
     MEDICINE,
     SCIENCE,
+    conditionsFields,
+    DETERMINATION,
+    STRESS,
+    isAttributeField,
+    isDepartmentField,
     dehydrate,
     hydrate,
   };

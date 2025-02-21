@@ -55,6 +55,7 @@ const relayConfig = {
         },
         ...args: string[]
       ): Promise<void> => {
+        console.log(`Starting to add hero die! With props: ${JSON.stringify(props)} and arguments ${JSON.stringify(args)}`);
         const [originalRoll, originalTitle] = args;
         return addHeroDie(props, Number(originalRoll), originalTitle);
       },

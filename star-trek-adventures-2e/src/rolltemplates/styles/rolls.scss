@@ -28,7 +28,17 @@
         &:nth-child(5n-4) {
           grid-column: 2 / span 2;
         }
+        &.critical-succcess {
+          color: var(--rolltemplate-text-color-2);
+        }
+        &.critical-failure {
+          color: var(--rolltemplate-text-color-3);
+        }
       }
     }
+  }
+  .roll.reroll {
+    display: flex;
+    justify-content: center;
   }
 }
