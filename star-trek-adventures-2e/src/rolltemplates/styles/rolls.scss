@@ -8,12 +8,12 @@
 
     &__title {
       grid-column: span 6;
-      font-size: .8rem;
+      font-size: 0.8rem;
       justify-self: center;
       align-self: center;
     }
 
-    &__dice-results{
+    &__dice-results {
       display: grid;
       grid-template-columns: subgrid;
       grid-column: 1/-1;
@@ -22,7 +22,7 @@
       align-items: center;
       justify-items: center;
 
-      li{
+      li {
         font-size: 1.25rem;
         grid-column: span 2;
         &:nth-child(5n-4) {

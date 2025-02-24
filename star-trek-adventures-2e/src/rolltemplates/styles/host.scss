@@ -1,6 +1,6 @@
-@use "../../common/scss/vars.scss";
+@use '../../common/scss/vars.scss';
 
-@use "./rolls.scss";
+@use './rolls.scss';
 
 @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&display=swap');
 
@@ -10,13 +10,18 @@
   color: var(--rolltemplate-text-color);
 }
 
-rolltemplate.sta2 {
+.message:has(span.by) {
+  .flyout {
+    top: 20px;
+  }
+}
 
+rolltemplate.sta2 {
   display: grid;
   width: 100%;
 
   color: var(--rolltemplate-text-color);
-  font-family: "Antonio", "Arial Narrow";
+  font-family: 'Antonio', 'Arial Narrow';
 
   grid-template-columns: repeat(5, 1fr);
 
@@ -25,7 +30,6 @@ rolltemplate.sta2 {
   padding: 0 0 0px 8px;
 
   border-radius: 4px;
-
 
   &:hover {
     -webkit-text-stroke: 1px #fff4;
@@ -61,7 +65,7 @@ rolltemplate.sta2 {
     }
 
     &__bottom {
-      grid-template-rows: 1.125rem auto
+      grid-template-rows: 1.125rem auto;
     }
 
     &__top-sidebar {
@@ -82,7 +86,7 @@ rolltemplate.sta2 {
 
     &__top-content,
     &__bottom-content {
-      filter:blur(0.01);
+      filter: blur(0.01);
     }
 
     &__top-content {
@@ -94,8 +98,7 @@ rolltemplate.sta2 {
       h6 {
         margin: 0;
         font-weight: 400;
-        color: var(--rolltemplate-text-color)
-
+        color: var(--rolltemplate-text-color);
       }
 
       &::after {
@@ -104,7 +107,7 @@ rolltemplate.sta2 {
         bottom: 0;
         height: 1rem;
         width: 1rem;
-        content: " ";
+        content: ' ';
         background-color: var(--top-sidebar);
         z-index: 0;
       }
@@ -112,13 +115,12 @@ rolltemplate.sta2 {
 
     &__bottom-sidebar,
     &__bottom-overbar {
-
-      color:black;
+      color: black;
       -webkit-text-stroke: 0 currentColor;
     }
 
     &__bottom-sidebar {
-      justify-content:flex-end;
+      justify-content: flex-end;
       margin-bottom: 0;
       grid-template-rows: repeat(5, max-content);
       grid-row: span 2;
@@ -201,14 +203,14 @@ rolltemplate.sta2 {
         top: 0;
         height: 1rem;
         width: 1rem;
-        content: " ";
+        content: ' ';
         background-color: var(--bottom-sidebar);
         z-index: 0;
       }
 
-      &>*:first-child {
+      & > *:first-child {
         z-index: 1;
-        background-color: var(--rolltemplate-background-color);    
+        background-color: var(--rolltemplate-background-color);
         padding: 8px;
         border-radius: 1rem 0 0 0;
       }
