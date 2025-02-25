@@ -35,6 +35,26 @@
       >
         Clear
       </button>
+      <label 
+        v-if="formStarted"
+        class="readout__entry readout__entry--name"
+      >
+        <span>Name</span>
+        <input
+          v-model="rollStore.activeName"
+          type="text"
+        >
+      </label>
+      <button 
+        class="readout__save-button"
+        @click="rollStore.saveRoll"
+      >
+        <img
+          src="../../../common/assets/star.svg"
+          role="presentation"
+        >
+        <span> Save </span>
+      </button>
       <button 
         v-if="rollStore.savedRollActive"
         type="reset"
@@ -42,14 +62,6 @@
       >
         Delete Roll
       </button>
-      <span
-        class="readout__dice"
-        v-if="formStarted"        
-      >
-        Dice: 
-        {{ diceCounter }}
-        <!-- {{ (JSON.stringify(rollStore.activeStats)).replace(/,/g,", ") }} --> 
-      </span>
     </div>
     <div class="readout__entries">
       <span 
@@ -58,16 +70,7 @@
       >
         Click an Attribute, Department, or Focus to start a roll!
       </span>
-      <label 
-        v-if="formStarted"
-        class="readout__entry"
-      >
-        <span>Name</span>
-        <input
-          v-model="rollStore.activeName"
-          type="text"
-        >
-      </label>
+      
       <label 
         v-if="formStarted"
         class="readout__entry"
@@ -137,6 +140,16 @@
         resource="Threat"
         v-model="rollStore.activeStats.threatDice"
       />
+      <ResourceIncrementer
+        v-if="formStarted"
+        resource="Determination"
+        v-model="rollStore.activeStats.determinationDice"
+      />
+      <ResourceIncrementer
+        v-if="formStarted"
+        resource="Complication range"
+        v-model="rollStore.activeStats.complicationRange"
+      />
       <!-- <label 
         v-if="formStarted"
         class="readout__entry"
@@ -160,16 +173,13 @@
       >
         Roll 
       </button>
-      <button 
-        class="readout__save-button"
-        @click="rollStore.saveRoll"
+      <span
+        class="readout__dice"
+        v-if="formStarted"        
       >
-        <img
-          src="../../../common/assets/star.svg"
-          role="presentation"
-        >
-        <span> Save </span>
-      </button>
+        Dice: 
+        {{ diceCounter }}
+      </span>
       <!-- <button 
         class="readout__add-button"
         @click="rollStore.addDie('determination')"
@@ -225,7 +235,6 @@ watch(focus, (newValue) => {
 
 const diceCounter = computed(() => {
   return rollStore.activeStats.baseDice + 
-          rollStore.activeStats.determinationDice +
           rollStore.activeStats.threatDice + 
           rollStore.activeStats.momentumDice;
 });
@@ -318,7 +327,12 @@ const deleteSavedRoll = () => {
           height: 16px;
         }
       }
+      &--name {
+        grid-template-rows: none;
+        grid-row: unset;
+      }
     }
+    
 
     &__header,
     &__prompt {

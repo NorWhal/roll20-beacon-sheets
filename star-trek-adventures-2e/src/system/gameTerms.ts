@@ -61,6 +61,21 @@ export type ResourcesValue = (typeof ResourcesEnum)[ResourcesKey];
 export const ResourcesValues = Object.values(ResourcesEnum) as ResourcesValue[];
 export const isResourcesValue = (value: string): value is ResourcesValue => ResourcesValues.includes(value as ResourcesValue);
 
+// region roll modifiers
+/** Stats dealing with the current meta state of the scene/party */
+export const RollModifiersEnum = {
+  COMPLICATIONRANGE: 'Complication range',
+  DETERMINATIONDICE: 'Determination',
+} as const;
+export type RollModifiersKey = keyof typeof RollModifiersEnum;
+export const RollModifiersKeys = Object.keys(RollModifiersEnum) as RollModifiersKey[];
+export const isRollModifiersKey = (key: string): key is RollModifiersKey => key in RollModifiersEnum;
+export type RollModifiersValue = (typeof RollModifiersEnum)[RollModifiersKey];
+export const RollModifiersValues = Object.values(RollModifiersEnum) as RollModifiersValue[];
+export const isRollModifiersValue = (value: string): value is RollModifiersValue => RollModifiersValues.includes(value as RollModifiersValue);
+export const isComplicationRange = (value: string): value is RollModifiersValue => value == RollModifiersValues['COMPLICATIONRANGE'];
+export const isDeterminationDice = (value: string): value is RollModifiersValue => value == RollModifiersValues['DETERMINATIONDICE'];
+
 // region Advancement
 const AdvancementTypesEnum = {
   LOG: 'Log',

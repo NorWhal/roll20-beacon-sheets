@@ -28,10 +28,11 @@
         &:nth-child(5n-4) {
           grid-column: 2 / span 2;
         }
-        &.critical-succcess {
+        &.critical-success,
+        &.determination {
           color: var(--rolltemplate-text-color-2);
         }
-        &.critical-failure {
+        &.complication {
           color: var(--rolltemplate-text-color-3);
         }
       }
