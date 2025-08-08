@@ -1,4 +1,4 @@
-import { isAttributeKey, AttributesEnum, isDepartmentKey, type AttributeKey, type DepartmentKey } from '@/system/gameTerms';
+import { isAttributeKey, AttributesEnum, isDepartmentKey, type AttributeKey, type DepartmentKey, isDeterminationDice } from '@/system/gameTerms';
 import { defineStore } from 'pinia';
 import { computed, type ComputedRef, reactive, ref, toRaw } from 'vue';
 import { useStatsStore } from '../statsStore/statsStore';
@@ -16,8 +16,7 @@ export type ActiveStats = {
   threatDice: number;
   momentumDice: number;
   focus: string;
-  traits?: string[];
-  talents?: string[];
+  complicationRange: number;
 };
 
 export type PreparedRollStats = {
@@ -49,6 +48,7 @@ export const useRollStore = defineStore('roll', () => {
     threatDice: 0,
     momentumDice: 0,
     focus: '',
+    complicationRange: 1,
   });
   const savedRolls = reactive<Map<string, ActiveStats>>(new Map());
 
@@ -72,12 +72,12 @@ export const useRollStore = defineStore('roll', () => {
   const clearActiveStats = () => {
     delete activeStats.attribute;
     delete activeStats.department;
+    activeStats.baseDice = 0;
     activeStats.determinationDice = 0;
     activeStats.threatDice = 0;
     activeStats.momentumDice = 0;
     activeStats.focus = '';
-    activeStats.traits = [];
-    activeStats.talents = [];
+    activeStats.complicationRange = 1;
   };
 
   const addFocus = async (focus: string) => {
@@ -94,7 +94,7 @@ export const useRollStore = defineStore('roll', () => {
     console.log(`Base: ${base}, determination: ${determination}, 
                 threat: ${threat}, momentum: ${momentum}, 
                 five? ${base + determination + threat + momentum < 5}`);
-    if (base + determination + threat + momentum < 5) {
+    if (base + threat + momentum < 5) {
       switch (type) {
         case 'determination': {
           console.log(`Adding determination die`);
@@ -130,7 +130,7 @@ export const useRollStore = defineStore('roll', () => {
     }
   };
 
-  type RollClass = 'critical-success' | 'critical-failure' | 'no-crit';
+  type RollClass = 'critical-success' | 'determination' | 'complication' | 'success' | 'no-crit';
 
   /** Used by the rolltemplate to show each individual die */
   type RollResult = {
@@ -143,47 +143,72 @@ export const useRollStore = defineStore('roll', () => {
   type RollParseContext = {
     dice?: number[];
     target: number;
-    focusApplied: boolean;
-    /** @todo actually implement this */
+    critRange: number;
+    /**@Done @todo actually implement this */
     complicationRange?: number;
+    determinationDice?: number;
   };
 
   /**
    * @param ctx The target number, whether a focus is applied, and
    * @returns the information needed to show numbers in the rolltemplate
    */
-  const parseRollResults = (ctx: RollParseContext): { rollResult: RollResult[]; successes: number } => {
-    const { dice = [], target, focusApplied } = ctx;
+  const parseRollResults = (ctx: RollParseContext): { rollResult: RollResult[]; successes: number; complications: number } => {
+    const { dice = [], target, critRange, complicationRange, determinationDice } = ctx;
     const results: RollResult[] = [];
-    let successes = 0;
+    let successes = 0,
+        complications = 0,
+        determination = determinationDice || 0;
     dice.forEach((roll) => {
+      console.log(`Roll: ${JSON.stringify(roll)}, Determination: ${JSON.stringify(determination)}, `)
       const rollSucceeded = roll <= target;
+      const rollComplication = roll > (20 - Number(complicationRange));
       let critClass: RollClass;
       switch (true) {
+        case determination > 0 :
+          roll = 1;
+          critClass = 'determination';
+          successes = successes + 2;
+          determination--;
+          break;
         case roll === 1:
-        case focusApplied && rollSucceeded:
+        case roll <= critRange && rollSucceeded:
           critClass = 'critical-success';
+          successes = successes + 2;
+          break;
+        case roll <= target:
+          critClass = 'success';
+          successes++;
           break;
         case roll === 20:
-          critClass = 'critical-failure';
+        case rollComplication:
+          critClass = 'complication';
+          complications++;
           break;
         default:
           critClass = 'no-crit';
       }
 
-      if (rollSucceeded) {
+      /* Replaced with logic in the switch cases
+       if (rollSucceeded) {
         successes += critClass === 'critical-success' ? 2 : 1;
-      }
+      } */
 
       results.push({
         roll: roll,
         class: critClass,
       });
     });
+    console.log(`Roll results: ${JSON.stringify({
+      rollResult: results,
+      successes,
+      complications
+    })}`);
 
     return {
       rollResult: results,
       successes,
+      complications
     };
   };
 
@@ -196,24 +221,24 @@ export const useRollStore = defineStore('roll', () => {
     const departmentLevel: number = activeStats.department ? statsStore[activeStats.department] : 0;
     const focusApplied = activeStats.focus.length > 0;
     const target = attributeLevel + departmentLevel;
-    //console.log(`Department level : ${departmentLevel} ${typeof departmentLevel}`);
-    const crit: number = focusApplied ? target : 1;
-    //console.log(`Crits are less or equal to ${crit}`);
+    const critRange: number = focusApplied ? departmentLevel : 1;
+    const complRange: number = activeStats.complicationRange; 
 
-    // Setup roll string
-    if (activeStats.determinationDice > Number(statsStore.DETERMINATION)) return;
-    const dice = activeStats.baseDice + activeStats.determinationDice + activeStats.threatDice + activeStats.momentumDice;
+    // Setup roll string and roll
+    const determination = (activeStats.determinationDice > Number(statsStore.DETERMINATION)) ? Number(statsStore.DETERMINATION) : activeStats.determinationDice;
+    console.log(`Determination: ${determination}`);
+    const dice = activeStats.baseDice + activeStats.threatDice + activeStats.momentumDice;
     const { results } = await dispatch.roll({
       rolls: {
-        roll: `${dice}d20<${targetNumber.value}cs<${1 + crit}`,
+        roll: `${dice}d20<${targetNumber.value}cs<${1 + critRange}`,
       },
     });
 
-    const { rollResult, successes } = parseRollResults({ dice: results.roll.results.dice, focusApplied, target });
+    const { rollResult, successes, complications } = parseRollResults({ dice: results.roll.results.dice, critRange: critRange, complicationRange: complRange, target, determinationDice: determination });
     //console.log(`Roll result array: ${JSON.stringify(rollResult)}`)
 
     // Create rolltemplate
-    const bottomBarValues = [`${dice}d20 ≤ ${target}`, `Successes: ${successes}`];
+    const bottomBarValues = [`${dice}d20 ≤ ${target}`, `Successes: ${successes}`, `Complications: ${complications}`];
     if (focusApplied) bottomBarValues.unshift(activeStats.focus);
     console.log(`Roll results: ${JSON.stringify(results)}`);
     const content = createRollTemplate({
@@ -224,14 +249,15 @@ export const useRollStore = defineStore('roll', () => {
         rollTitle: `${activeStats.attribute} + ${activeStats.department}`,
         bottomBarValues,
         dice: results.roll.results.dice,
-        critlevel: crit,
+        critRange: critRange,
+        //complRange: complRange,
         rollResult: rollResult,
         characterName: metaStore.name,
       },
     });
 
     // Reduce the Determination and Increase Threat
-    statsStore.conditionsFields.DETERMINATION.base = statsStore.DETERMINATION - activeStats.determinationDice;
+    statsStore.conditionsFields.DETERMINATION.base = statsStore.DETERMINATION - determination;
     gmStore.resources.threat = gmStore.resources.threat + activeStats.threatDice;
 
     // Post the rolltemplate to chat

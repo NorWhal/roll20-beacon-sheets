@@ -27,13 +27,15 @@ type RollPost = {
     bottomBarValues: string[],
     dice?: number[],
     rollResult?: any,
-    critlevel?: number,
+    critRange?: number,
+    complianceRange?: number,
   }
 };
 
 type AnyPostTemplate = RollPost;
 
 export const createRollTemplate = ({type, parameters}: AnyPostTemplate) => {
+  console.log(`Printing roll template parameters: ${JSON.stringify(parameters)}`);
   const template = postTemplates[type];
   const postTemplate = template({
     ...parameters
