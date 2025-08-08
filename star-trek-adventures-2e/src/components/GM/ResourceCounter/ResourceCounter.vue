@@ -1,3 +1,34 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+
+export interface ResourceCounterProps {
+  id: string
+  label: string
+  modelValue: {
+    value: number
+  }
+}
+const props = defineProps<ResourceCounterProps>()
+
+const emit = defineEmits(['update:modelValue'])
+
+const model = computed({
+  get() {
+    return props.modelValue.value
+  },
+  set(newValue) {
+    emit('update:modelValue', { key: 'value', value: newValue })
+  },
+})
+
+function increment() {
+  emit('update:modelValue', { key: 'value', value: model.value + 1 })
+}
+function decrement() {
+  emit('update:modelValue', { key: 'value', value: model.value - 1 })
+}
+</script>
+
 <template>
   <div
     class="resource-counter"
@@ -7,56 +38,24 @@
       class="resource-counter__label"
       :for="id ?? label"
     > {{ label }}</label>
-    <button 
+    <button
       class="resource-counter__button resource-counter__button--subtract"
       aria-label="subtract"
       @click="decrement"
-    ></button>
-    <input 
+    />
+    <input
       :id="id ?? label"
       v-model="model"
       class="resource-counter__input"
       type="number"
     >
-    <button 
+    <button
       class="resource-counter__button resource-counter__button--add"
       aria-label="add"
       @click="increment"
-    ></button>
+    />
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-
-export type ResourceCounterProps = {
-  id: string;
-  label: string;
-  modelValue: {
-    value: number;
-  }
-}
-const props = defineProps<ResourceCounterProps>();
-
-const emit = defineEmits(["update:modelValue"])
-
-let model = computed({
-  get() {
-    return props.modelValue.value
-  },
-  set(newValue) {
-    emit("update:modelValue", {key: "value", value: newValue})
-  }
-})
-
-const increment = () => {
-  emit("update:modelValue", {key: "value", value: model.value+1})
-}
-const decrement = () => {
-  emit("update:modelValue", {key: "value", value: model.value-1})
-}
-
-</script>
 
 <style scoped lang="scss">
   @use "@/common/scss/common.scss";

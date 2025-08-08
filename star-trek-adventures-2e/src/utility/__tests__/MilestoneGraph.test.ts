@@ -1,50 +1,51 @@
-import { describe, expect, it } from 'vitest';
-import { CharacterValues, MilestoneGraph } from '../MilestoneGraph';
+import type { CharacterValues } from '../MilestoneGraph'
+import { describe, expect, it } from 'vitest'
+import { MilestoneGraph } from '../MilestoneGraph'
 
-const firstValuePath = ['this', 'is', 'an', 'example'];
-const secondValuePath = ['so', 'is', 'this'];
+const firstValuePath = ['this', 'is', 'an', 'example']
+const secondValuePath = ['so', 'is', 'this']
 
-describe('MilestoneGraphs', () => {
-  describe('Character Values', () => {
+describe('milestoneGraphs', () => {
+  describe('character Values', () => {
     it('should store a given set of valuePaths', () => {
       const startingValues: CharacterValues = {
         test1: firstValuePath,
         test2: secondValuePath,
-      };
-      const graph = new MilestoneGraph({ startingValues });
+      }
+      const graph = new MilestoneGraph({ startingValues })
       expect([...graph.characterValues.entries()]).toEqual([
         ['test1', firstValuePath],
         ['test2', secondValuePath],
-      ]);
-    });
+      ])
+    })
     it('should support adding a new valuePath', () => {
-      const graph = new MilestoneGraph();
-      expect(graph.characterValues.size).toBe(0);
-      graph.addValuePath('test');
-      expect(graph.characterValues.size).toBe(1);
-      expect(graph.characterValues.get('test')).toEqual(['']);
-    });
+      const graph = new MilestoneGraph()
+      expect(graph.characterValues.size).toBe(0)
+      graph.addValuePath('test')
+      expect(graph.characterValues.size).toBe(1)
+      expect(graph.characterValues.get('test')).toEqual([''])
+    })
     it('should support removing a specified valuePath', () => {
-      const graph = new MilestoneGraph({ startingValues: { test: ['a', 'path'] } });
-      expect(graph.characterValues.get('test')).toEqual(['a', 'path']);
-      graph.removeValuePath('test');
-      expect(graph.characterValues.get('test')).toBeUndefined();
-    });
+      const graph = new MilestoneGraph({ startingValues: { test: ['a', 'path'] } })
+      expect(graph.characterValues.get('test')).toEqual(['a', 'path'])
+      graph.removeValuePath('test')
+      expect(graph.characterValues.get('test')).toBeUndefined()
+    })
     it('should be able to provide the latest step in a specified valuePath', () => {
-      const graph = new MilestoneGraph({ startingValues: { test: firstValuePath } });
-      expect(graph.getLatestValueStep('test')).toBe('example');
-    });
+      const graph = new MilestoneGraph({ startingValues: { test: firstValuePath } })
+      expect(graph.getLatestValueStep('test')).toBe('example')
+    })
     it('should support adding a step to a specified valuePath', () => {
-      const graph = new MilestoneGraph({ startingValues: { test: firstValuePath } });
-      expect(graph.getLatestValueStep('test')).toBe('example');
-      graph.addNewValueStep('test');
-      expect(graph.getLatestValueStep('test')).toBe('');
-    });
+      const graph = new MilestoneGraph({ startingValues: { test: firstValuePath } })
+      expect(graph.getLatestValueStep('test')).toBe('example')
+      graph.addNewValueStep('test')
+      expect(graph.getLatestValueStep('test')).toBe('')
+    })
     it('should support removing a step from a specified valuePath', () => {
-      const graph = new MilestoneGraph({ startingValues: { test: secondValuePath } });
-      expect(graph.getLatestValueStep('test')).toBe('this');
-      graph.removeLatestValueStep('test');
-      expect(graph.getLatestValueStep('test')).toBe('is');
-    });
-  });
-});
+      const graph = new MilestoneGraph({ startingValues: { test: secondValuePath } })
+      expect(graph.getLatestValueStep('test')).toBe('this')
+      graph.removeLatestValueStep('test')
+      expect(graph.getLatestValueStep('test')).toBe('is')
+    })
+  })
+})

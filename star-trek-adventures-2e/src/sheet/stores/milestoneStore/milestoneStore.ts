@@ -1,11 +1,10 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
-export const useMilestoneStore = defineStore("milestones", () => {
-
-  const hydrate = () => { };
+export const useMilestoneStore = defineStore('milestones', () => {
+  const hydrate = () => { }
   const dehydrate = () => { }
   return {
     hydrate,
-    dehydrate
+    dehydrate,
   }
 })

@@ -1,17 +1,17 @@
-import { cleanup, render, screen } from '@testing-library/vue';
-import TheReadout from '../TheReadout.vue';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useRollStore } from '@/sheet/stores/rollStore/rollStore';
-import { setActivePinia } from 'pinia';
-import { createTestingPinia } from '@pinia/testing';
-import { nextTick, ref } from 'vue';
-import userEvent from '@testing-library/user-event';
-import { useStatsStore } from '@/sheet/stores/statsStore/statsStore';
+import { createTestingPinia } from '@pinia/testing'
+import userEvent from '@testing-library/user-event'
+import { cleanup, render, screen } from '@testing-library/vue'
+import { setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
+import { useRollStore } from '@/sheet/stores/rollStore/rollStore'
+import { useStatsStore } from '@/sheet/stores/statsStore/statsStore'
+import TheReadout from '../TheReadout.vue'
 
-const doRender = () => {
-  const mounted = render(TheReadout, {});
-  return mounted;
-};
+function doRender() {
+  const mounted = render(TheReadout, {})
+  return mounted
+}
 
 const fakeRollResult = {
   type: 'rollResults',
@@ -35,7 +35,7 @@ const fakeRollResult = {
       },
     },
   },
-};
+}
 
 const mocks = vi.hoisted(() => ({
   dispatchRef: {
@@ -45,86 +45,86 @@ const mocks = vi.hoisted(() => ({
     },
   },
   initValues: {},
-}));
+}))
 
 vi.mock('@/relay/relay', () => {
   return {
     dispatchRef: mocks.dispatchRef,
     initValues: mocks.initValues,
-  };
-});
+  }
+})
 
-describe('TheReadout', () => {
+describe('theReadout', () => {
   beforeEach(() => {
-    cleanup();
+    cleanup()
     setActivePinia(
       createTestingPinia({
         createSpy: vi.fn,
         stubActions: false,
         stubPatch: false,
       }),
-    );
-  });
+    )
+  })
 
   it('should reactively display the active stats, or show nothing if stat is undefined', async () => {
-    const rollStore = useRollStore();
-    doRender();
+    const rollStore = useRollStore()
+    doRender()
 
-    expect(screen.queryByLabelText('Department')).toBeNull();
-    expect(screen.queryByLabelText('Attribute')).toBeNull();
-    expect(screen.queryByLabelText('Focus')).toBeNull();
+    expect(screen.queryByLabelText('Department')).toBeNull()
+    expect(screen.queryByLabelText('Attribute')).toBeNull()
+    expect(screen.queryByLabelText('Focus')).toBeNull()
 
-    rollStore.activeStats.department = 'CONN';
-    await nextTick();
-    const department = screen.getByLabelText('Department') as HTMLInputElement;
-    expect(department.value).toBe('Conn');
+    rollStore.activeStats.department = 'CONN'
+    await nextTick()
+    const department = screen.getByLabelText('Department') as HTMLInputElement
+    expect(department.value).toBe('Conn')
 
-    rollStore.activeStats.attribute = 'DARING';
-    await nextTick();
-    const attribute = screen.getByLabelText('Attribute') as HTMLInputElement;
-    expect(attribute.value).toBe('Daring');
+    rollStore.activeStats.attribute = 'DARING'
+    await nextTick()
+    const attribute = screen.getByLabelText('Attribute') as HTMLInputElement
+    expect(attribute.value).toBe('Daring')
 
-    rollStore.activeStats.focus = 'Warp Field Mechanics';
-    await nextTick();
-    const focus = screen.getByLabelText('Focus') as HTMLInputElement;
-    expect(focus.value).toBe('Warp Field Mechanics');
-  });
+    rollStore.activeStats.focus = 'Warp Field Mechanics'
+    await nextTick()
+    const focus = screen.getByLabelText('Focus') as HTMLInputElement
+    expect(focus.value).toBe('Warp Field Mechanics')
+  })
 
   it('should have a button that clears the active attributes', async () => {
-    const rollStore = useRollStore();
-    rollStore.activeStats.department = 'CONN';
-    rollStore.activeStats.attribute = 'DARING';
-    rollStore.activeStats.focus = 'Warp Field Mechanics';
-    doRender();
-    await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
+    const rollStore = useRollStore()
+    rollStore.activeStats.department = 'CONN'
+    rollStore.activeStats.attribute = 'DARING'
+    rollStore.activeStats.focus = 'Warp Field Mechanics'
+    doRender()
+    await userEvent.click(screen.getByRole('button', { name: 'Clear' }))
     expect(rollStore.activeStats).toEqual(
       expect.not.objectContaining({
         department: expect.anything(),
       }),
-    );
+    )
     expect(rollStore.activeStats).toEqual(
       expect.not.objectContaining({
         attribute: expect.anything(),
       }),
-    );
+    )
     expect(rollStore.activeStats).toEqual(
       expect.objectContaining({
         focus: '',
       }),
-    );
-  });
+    )
+  })
 
   it('should have a roll button that rolls an assembled roll', async () => {
-    const statsStore = useStatsStore();
-    statsStore.departmentFields.CONN.base = 4;
-    statsStore.attributeFields.DARING.base = 10;
-    const rollStore = useRollStore();
-    rollStore.activeStats.department = 'CONN';
-    rollStore.activeStats.attribute = 'DARING';
-    rollStore.activeStats.baseDice = 2;
-    doRender();
-    mocks.dispatchRef.value.roll.mockResolvedValueOnce(fakeRollResult);
-    await userEvent.click(screen.getByRole('button', { name: 'Roll' }));
-    expect(mocks.dispatchRef.value.roll).toHaveBeenCalledWith({ rolls: { roll: `2d20<14cs<2` } });
-  });
-});
+    const statsStore = useStatsStore()
+    statsStore.departmentFields.CONN.base = 4
+    statsStore.attributeFields.DARING.base = 10
+    const rollStore = useRollStore()
+    rollStore.activeStats.department = 'CONN'
+    rollStore.activeStats.attribute = 'DARING'
+    rollStore.activeStats.baseDice = 2
+    doRender()
+    mocks.dispatchRef.value.roll.mockResolvedValueOnce(fakeRollResult)
+    await userEvent.click(screen.getByRole('button', { name: 'Roll' }))
+    expect(mocks.dispatchRef.value.roll).toHaveBeenCalledWith({ rolls: { roll: `2d20<14cs<2` } })
+  })
+})

@@ -1,8 +1,98 @@
+<script setup lang="ts">
+import type { MessageModifier, StatModifier } from '@/sheet/stores/statsStore/statsStore'
+import type { AttributeKey, DepartmentKey } from '@/system/gameTerms'
+import { offset, useFloating } from '@floating-ui/vue'
+import { computed, ref } from 'vue'
+import { useRollStore } from '@/sheet/stores/rollStore/rollStore'
+import { useStatsStore } from '@/sheet/stores/statsStore/statsStore'
+import { useUIStore } from '@/sheet/stores/uiStore/uiStore'
+import { isAttributeKey, isDepartmentKey } from '@/system/gameTerms'
+import { getOperationSymbol } from '@/utility/getSymbols'
+
+export interface StatInterfaceProps {
+  stat: AttributeKey | DepartmentKey
+}
+
+const props = defineProps<StatInterfaceProps>()
+
+const uiStore = useUIStore()
+const statsStore = useStatsStore()
+const rollStore = useRollStore()
+
+const editing = computed(() => {
+  return uiStore.editMode
+})
+
+const { stat } = props
+
+const isAttribute = isAttributeKey(stat)
+const isDepartment = isDepartmentKey(stat)
+const total = computed(() => statsStore[stat])
+const label = computed(() => {
+  if (isAttribute)
+    return statsStore.attributeFields[stat].label
+  if (isDepartment)
+    return statsStore.departmentFields[stat].label
+  console.error('Stat unrecognized: ', stat)
+  return 'Error'
+})
+const modifiers = computed<(StatModifier | MessageModifier)[]>(() => {
+  let statField
+  if (isAttribute) {
+    statField = statsStore.attributeFields[stat]
+  }
+  if (isDepartment) {
+    statField = statsStore.departmentFields[stat]
+  }
+  if (statField?.modifiers && statField.modifiers.length > 0)
+    return statField.modifiers
+  return [{ note: `No ${label.value} Modifiers. Click to add some!` }]
+})
+
+const statBase = computed({
+  get: () => {
+    if (isAttribute)
+      return statsStore.attributeFields[stat].base
+    if (isDepartment)
+      return statsStore.departmentFields[stat].base
+    console.error('Stat unrecognized: ', stat)
+    return -1
+  },
+  set: (newValue) => {
+    if (isAttribute)
+      statsStore.attributeFields[stat].base = newValue ?? 0
+    if (isDepartment)
+      statsStore.departmentFields[stat].base = newValue ?? 0
+  },
+})
+
+function setModifyingToStat() {
+  uiStore.modifyingStat = stat
+}
+
+function setActiveToStat() {
+  if (isAttribute)
+    rollStore.activeStats.attribute = stat
+  else if (isDepartment)
+    rollStore.activeStats.department = stat
+  rollStore.activeStats.baseDice++
+}
+
+const reference = ref(null)
+const floating = ref(null)
+const showTooltip = ref(false)
+
+const { floatingStyles } = useFloating(reference, floating, {
+  placement: 'right',
+  middleware: [offset(16)],
+})
+</script>
+
 <template>
-  <button 
+  <button
     v-if="!editing"
     class="stat-view"
-    :class="`stat-view--${stat.toLowerCase()}`" 
+    :class="`stat-view--${stat.toLowerCase()}`"
     @click="rollStore.addDie(stat)"
   >
     <!-- @click="setActiveToStat()" -->
@@ -24,8 +114,7 @@
     class="stat-edit"
     :class="`stat-edit--${stat.toLowerCase()}`"
   >
-
-<!-- For button below once modifiers are installed
+    <!-- For button below once modifiers are installed
       @mouseover="showTooltip = true"
       @focus="showTooltip = true"
       @blur="showTooltip = false"
@@ -52,7 +141,7 @@
     >
       <li
         v-for="(modifier, index) in modifiers"
-        :key = index
+        :key="index"
         :data-testid="`popover-modifier-${index}`"
         class="modifiers-display__modifier-wrapper"
       >
@@ -74,88 +163,6 @@
     </ul>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { AttributeKey, DepartmentKey } from '@/system/gameTerms';
-import { isAttributeKey, isDepartmentKey } from '@/system/gameTerms';
-import { MessageModifier, StatModifier, useStatsStore } from '@/sheet/stores/statsStore/statsStore';
-import { useUIStore } from '@/sheet/stores/uiStore/uiStore';
-import { getOperationSymbol } from '@/utility/getSymbols';
-import { offset, useFloating } from '@floating-ui/vue';
-import { computed, ref } from 'vue';
-import { useRollStore } from '@/sheet/stores/rollStore/rollStore';
-
-export type StatInterfaceProps = {
-  stat: AttributeKey | DepartmentKey;
-};
-
-const props = defineProps<StatInterfaceProps>();
-
-const uiStore = useUIStore();
-const statsStore = useStatsStore();
-const rollStore = useRollStore();
-
-const editing = computed(() => {
-  return uiStore.editMode;
-});
-
-const { stat } = props;
-
-const isAttribute = isAttributeKey(stat);
-const isDepartment = isDepartmentKey(stat);
-const total = computed(() => statsStore[stat]);
-const label = computed(() => {
-  if (isAttribute) 
-    return statsStore.attributeFields[stat].label;
-  if (isDepartment) 
-    return statsStore.departmentFields[stat].label;
-  console.error("Stat unrecognized: ", stat)
-  return "Error"
-});
-const modifiers = computed<(StatModifier | MessageModifier)[]>(() => {
-  let statField;
-  if (isAttribute) {
-    statField = statsStore.attributeFields[stat];
-  }
-  if (isDepartment) {
-    statField = statsStore.departmentFields[stat];
-  }
-  if (statField?.modifiers && statField.modifiers.length > 0) return statField.modifiers;
-  return [{ note: `No ${label.value} Modifiers. Click to add some!` }];
-});
-
-const statBase = computed({
-  get: () => {
-    if (isAttribute) return statsStore.attributeFields[stat].base;
-    if (isDepartment) return statsStore.departmentFields[stat].base;
-    console.error("Stat unrecognized: ", stat)
-    return -1
-  },
-  set: (newValue) => {
-    if (isAttribute) statsStore.attributeFields[stat].base = newValue ?? 0;
-    if (isDepartment) statsStore.departmentFields[stat].base = newValue ?? 0;
-  },
-});
-
-const setModifyingToStat = () => {
-  uiStore.modifyingStat = stat;
-};
-
-const setActiveToStat = () => {
-  if (isAttribute) rollStore.activeStats.attribute = stat;
-  else if (isDepartment) rollStore.activeStats.department = stat;  
-  rollStore.activeStats.baseDice++; 
-};
-
-const reference = ref(null);
-const floating = ref(null);
-const showTooltip = ref(false);
-
-const { floatingStyles } = useFloating(reference, floating, {
-  placement: 'right',
-  middleware: [offset(16)],
-});
-</script>
 
 <style lang="scss">
 @use '../../../common/scss/common.scss';

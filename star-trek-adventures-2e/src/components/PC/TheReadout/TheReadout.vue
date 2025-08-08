@@ -1,8 +1,80 @@
+<script setup lang="ts">
+import type { ActiveStats } from '@/sheet/stores/rollStore/rollStore'
+import type { AttributeKey, DepartmentKey } from '@/system/gameTerms'
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
+import { useRollStore } from '@/sheet/stores/rollStore/rollStore'
+import { AttributesEnum, DepartmentsEnum } from '@/system/gameTerms'
+import ResourceIncrementer from './ResourceIncrementer.vue'
+
+const rollStore = useRollStore()
+
+function readStat(stat: keyof ActiveStats) {
+  const value = rollStore.activeStats[stat]
+  return value
+}
+
+const attribute = computed(() =>
+  readStat('attribute') as AttributeKey | undefined,
+)
+const department = computed(() =>
+  readStat('department') as DepartmentKey | undefined,
+)
+
+const showFocus = ref(false)
+
+const focus = computed({
+  get() {
+    return rollStore.activeStats.focus
+  },
+  set(value: string) {
+    rollStore.activeStats.focus = value
+  },
+})
+
+watch(focus, (newValue) => {
+  if (newValue.length && !showFocus.value) {
+    showFocus.value = true
+  }
+  else if (!newValue.length) {
+    showFocus.value = false
+  }
+})
+
+const diceCounter = computed(() => {
+  return rollStore.activeStats.baseDice
+    + rollStore.activeStats.threatDice
+    + rollStore.activeStats.momentumDice
+})
+
+const formStarted = computed(() => {
+  const state = (attribute.value || department.value || focus.value)
+  return state
+})
+
+const focusInput = useTemplateRef('focus-input')
+function toggleFocus() {
+  showFocus.value = !showFocus.value
+  if (showFocus.value) {
+    nextTick(() => focusInput.value?.focus())
+  }
+}
+
+function clearReadout() {
+  rollStore.clearActiveStats()
+  showFocus.value = false
+}
+
+function deleteSavedRoll() {
+  rollStore.savedRolls.delete(rollStore.activeName)
+  clearReadout()
+}
+</script>
+
 <template>
-  <section 
+  <section
     class="readout"
     :class="{
-      'readout--active': formStarted
+      'readout--active': formStarted,
     }"
   >
     <h2 class="readout__header">
@@ -13,29 +85,28 @@
         v-for="key in rollStore.savedRolls.keys()"
         :key="key"
       >
-        <button 
-          :class="{
-            'readout__saved-roll-button': true,
+        <button
+          class="readout__saved-roll-button" :class="{
             'readout__saved-roll-button--active': rollStore.savedRollActive && key === rollStore.activeName,
           }"
           @click="rollStore.handleSavedRollClick(key)"
-        > 
-          {{ key }} 
+        >
+          {{ key }}
         </button>
       </div>
     </aside>
-    <div 
+    <div
       v-if="formStarted"
       class="readout__button-col"
     >
-      <button 
+      <button
         type="reset"
         class="readout__clear-button"
         @click="clearReadout"
       >
         Clear
       </button>
-      <label 
+      <label
         v-if="formStarted"
         class="readout__entry readout__entry--name"
       >
@@ -45,7 +116,7 @@
           type="text"
         >
       </label>
-      <button 
+      <button
         class="readout__save-button"
         @click="rollStore.saveRoll"
       >
@@ -55,7 +126,7 @@
         >
         <span> Save </span>
       </button>
-      <button 
+      <button
         v-if="rollStore.savedRollActive"
         type="reset"
         @click="deleteSavedRoll"
@@ -64,14 +135,14 @@
       </button>
     </div>
     <div class="readout__entries">
-      <span 
+      <span
         v-if="!formStarted"
         class="readout__prompt"
       >
         Click an Attribute, Department, or Focus to start a roll!
       </span>
-      
-      <label 
+
+      <label
         v-if="formStarted"
         class="readout__entry"
       >
@@ -89,7 +160,7 @@
           Choose Attribute!
         </span>
       </label>
-      <label 
+      <label
         v-if="formStarted"
         class="readout__entry"
       >
@@ -99,7 +170,7 @@
           type="text"
           disabled
           :value="DepartmentsEnum[department]"
-          >
+        >
         <span
           v-else-if="formStarted"
           class="readout__empty"
@@ -107,19 +178,19 @@
           Choose Department!
         </span>
       </label>
-      <label 
+      <label
         v-if="showFocus && formStarted"
         class="readout__entry"
       >
         <span>Focus</span>
         <input
           ref="focus-input"
+          v-model="focus"
           type="text"
           autofocus
-          v-model="focus"     
         >
       </label>
-      <button 
+      <button
         v-else-if="formStarted"
         class="readout__entry readout__entry--toggle"
         @click="toggleFocus"
@@ -132,25 +203,25 @@
       </button>
       <ResourceIncrementer
         v-if="formStarted"
-        resource="Momentum"
         v-model="rollStore.activeStats.momentumDice"
+        resource="Momentum"
       />
       <ResourceIncrementer
         v-if="formStarted"
-        resource="Threat"
         v-model="rollStore.activeStats.threatDice"
+        resource="Threat"
       />
       <ResourceIncrementer
         v-if="formStarted"
-        resource="Determination"
         v-model="rollStore.activeStats.determinationDice"
+        resource="Determination"
       />
       <ResourceIncrementer
         v-if="formStarted"
-        resource="Complication range"
         v-model="rollStore.activeStats.complicationRange"
+        resource="Complication range"
       />
-      <!-- <label 
+      <!-- <label
         v-if="formStarted"
         class="readout__entry"
       >
@@ -161,26 +232,25 @@
           :value="determination"
         >
       </label> -->
-          
     </div>
-    <div 
+    <div
       v-if="formStarted"
       class="readout__button-col"
-      >
+    >
       <button
         class="readout__roll-button"
         @click="rollStore.doRoll()"
       >
-        Roll 
+        Roll
       </button>
       <span
+        v-if="formStarted"
         class="readout__dice"
-        v-if="formStarted"        
       >
-        Dice: 
+        Dice:
         {{ diceCounter }}
       </span>
-      <!-- <button 
+      <!-- <button
         class="readout__add-button"
         @click="rollStore.addDie('determination')"
       >
@@ -193,75 +263,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-import { type ActiveStats, useRollStore } from '@/sheet/stores/rollStore/rollStore';
-import { AttributeKey, AttributesEnum, DepartmentKey, DepartmentsEnum } from '@/system/gameTerms';
-import { computed, ref, watch, useTemplateRef, nextTick } from 'vue';
-import ResourceIncrementer from './ResourceIncrementer.vue';
-
-const rollStore = useRollStore()
-
-const readStat = (stat: keyof ActiveStats) => {
-  const value = rollStore.activeStats[stat]
-  return value
-}
-
-const attribute = computed(() => 
-  readStat("attribute") as AttributeKey | undefined
-)
-const department = computed(() => 
-  readStat("department") as DepartmentKey | undefined
-)
-
-const showFocus = ref(false);
-
-const focus = computed({
-  get() {
-    return rollStore.activeStats.focus
-  },
-  set(value: string) {
-    rollStore.activeStats.focus = value
-  }
-})
-
-watch(focus, (newValue) => {
-  if (newValue.length && !showFocus.value) {
-    showFocus.value = true;
-  } else if (!newValue.length) {
-    showFocus.value = false;
-  }
-})
-
-const diceCounter = computed(() => {
-  return rollStore.activeStats.baseDice + 
-          rollStore.activeStats.threatDice + 
-          rollStore.activeStats.momentumDice;
-});
-
-const formStarted = computed(() => {
-  const state = (attribute.value || department.value || focus.value);
-  return state;
-})
-
-const focusInput = useTemplateRef("focus-input");
-const toggleFocus = () => {
-  showFocus.value = !showFocus.value;
-  if (showFocus.value) {
-    nextTick(() => focusInput.value?.focus()) 
-  }
-}
-
-const clearReadout = () => {
-  rollStore.clearActiveStats();
-  showFocus.value = false;
-}
-
-const deleteSavedRoll = () => {
-  rollStore.savedRolls.delete(rollStore.activeName)
-  clearReadout();
-}
-</script>
 
 <style lang="scss">
   .readout {
@@ -332,7 +333,6 @@ const deleteSavedRoll = () => {
         grid-row: unset;
       }
     }
-    
 
     &__header,
     &__prompt {

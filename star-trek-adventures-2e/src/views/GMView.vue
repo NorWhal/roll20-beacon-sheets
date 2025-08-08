@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { ResourceCounter } from '@/components/GM/ResourceCounter'
+import { initValues } from '@/relay/relay'
+import { useGMStore } from '@/sheet/stores/gmStore/gmStore'
+
+const gmStore = useGMStore()
+
+const momentum = computed({
+  get() { return gmStore.resources.momentum },
+  set(newValue) {
+    gmStore.resources.momentum = newValue
+  },
+})
+
+const threat = computed({
+  get() { return gmStore.resources.threat },
+  set(newValue) {
+    gmStore.resources.threat = newValue
+  },
+})
+
+const initValsComputed = computed(() => initValues)
+</script>
+
 <template>
   <div class="gm-sheet">
     <header class="gm-sheet__header">
@@ -8,31 +33,31 @@
       </button>
     </header>
     <main class="gm-sheet__main">
-      <div 
+      <div
         v-if="gmStore.localSheetID === initValsComputed.sharedSettings.gmID"
         class="gm-sheet__resource-inputs"
       >
-        <ResourceCounter 
+        <ResourceCounter
           id="Momentum"
           label="Momentum"
           data-testid="momentum-input"
-          :model-value="{value: momentum}"
+          :model-value="{ value: momentum }"
           @update:model-value="momentum = $event.value"
         />
-        <ResourceCounter 
+        <ResourceCounter
           id="Threat"
           label="Threat"
           data-testid="threat-input"
-          :model-value="{value: threat}"
+          :model-value="{ value: threat }"
           @update:model-value="threat = $event.value"
         />
       </div>
-      <div 
+      <div
         v-else
         class="gm-sheet__resource-displays"
       >
-        <div 
-          class="pc-header__resource-display" 
+        <div
+          class="pc-header__resource-display"
           data-testid="momentum-display"
         >
           Momentum: {{ momentum }}
@@ -47,32 +72,6 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ResourceCounter } from "@/components/GM/ResourceCounter";
-import { initValues } from "@/relay/relay";
-import { useGMStore } from "@/sheet/stores/gmStore/gmStore";
-import { computed } from "vue";
-
-const gmStore = useGMStore();
-
-const momentum = computed({
-  get() {return gmStore.resources.momentum},
-  set(newValue) {
-    gmStore.resources.momentum = newValue
-  }
-})
-
-const threat = computed({
-  get() {return gmStore.resources.threat},
-  set(newValue) {
-    gmStore.resources.threat = newValue
-  }
-})
-
-const initValsComputed = computed(() => initValues)
-
-</script>
 
 <style lang="scss">
 @use '../common/scss/vars.scss' as vars;

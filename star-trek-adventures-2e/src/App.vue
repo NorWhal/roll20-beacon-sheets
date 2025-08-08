@@ -1,3 +1,10 @@
+<script setup>
+import { useStarTrekStore } from './sheet/stores'
+
+const store = useStarTrekStore()
+const campaignId = store.meta.campaignId
+</script>
+
 <template>
   <div class="star-trek-adventures-2e">
     <div class="sheet-logo">
@@ -27,13 +34,6 @@
     </router-view>
   </div>
 </template>
-
-<script setup>
-import { useStarTrekStore } from './sheet/stores';
-
-const store = useStarTrekStore();
-const campaignId = store.meta.campaignId;
-</script>
 
 <style lang="scss">
 .header {

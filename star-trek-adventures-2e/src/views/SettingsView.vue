@@ -1,3 +1,25 @@
+<script setup>
+import { computed } from 'vue'
+import router from '@/router'
+import { useStarTrekStore } from '@/sheet/stores'
+import { useMetaStore } from '@/sheet/stores/meta/metaStore'
+import { useSettingsStore } from '@/sheet/stores/settings/settingsStore'
+
+const store = useStarTrekStore()
+const meta = useMetaStore()
+const settings = useSettingsStore()
+
+const isOwner = computed(() => meta.permissions.isOwner)
+const isGM = computed(() => meta.permissions.isGM)
+
+const goBack = () => router.replace({ name: 'sheet' })
+
+function loadExampleData() {
+  store.loadExampleData()
+  goBack()
+}
+</script>
+
 <template>
   <div class="settings">
     SETTINGS
@@ -30,28 +52,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import router from '@/router';
-import { useStarTrekStore } from '@/sheet/stores';
-import { useMetaStore } from '@/sheet/stores/meta/metaStore';
-import { useSettingsStore } from '@/sheet/stores/settings/settingsStore';
-import { computed } from 'vue';
-
-const store = useStarTrekStore();
-const meta = useMetaStore();
-const settings = useSettingsStore();
-
-const isOwner = computed(() => meta.permissions.isOwner);
-const isGM = computed(() => meta.permissions.isGM);
-
-const goBack = () => router.replace({ name: 'sheet' });
-
-const loadExampleData = () => {
-  store.loadExampleData();
-  goBack();
-};
-</script>
 
 <style lang="scss" scoped>
 @use '../common/scss/vars.scss';
