@@ -21,6 +21,43 @@ export const useGMStore = defineStore('gm', () => {
     threat: 0,
   });
 
+  const increaseThreatLevel = async (add:number) => {
+    const increasedThreat:number = resources.threat + add; 
+    const dispatch = toRaw(dispatchRef.value) as Dispatch;
+    await dispatch.updateSharedSettings({
+      settings: {
+        threat: increasedThreat,
+      },
+    });
+  }
+  const reduceThreatLevel = async (sub:number) => {
+    const reducedThreat:number = Math.max(resources.threat - sub,0); 
+    const dispatch = toRaw(dispatchRef.value) as Dispatch;
+    await dispatch.updateSharedSettings({
+      settings: {
+        threat: reducedThreat,
+      },
+    });
+  } 
+  const reduceMomentum = async (sub:number) => {
+    const reducedMomentum:number = Math.max(resources.momentum - sub,0); 
+    const dispatch = toRaw(dispatchRef.value) as Dispatch;
+    await dispatch.updateSharedSettings({
+      settings: {
+        momentum: reducedMomentum,
+      },
+    });
+  } 
+  const increaseMomentum = async (add:number) => {
+    const increasedMomentum:number = resources.momentum + add; 
+    const dispatch = toRaw(dispatchRef.value) as Dispatch;
+    await dispatch.updateSharedSettings({
+      settings: {
+        momentum: increasedMomentum,
+      },
+    });
+  } 
+
   watch(
     () => resources.momentum,
     async (newValue) => {
@@ -61,6 +98,10 @@ export const useGMStore = defineStore('gm', () => {
   return {
     resources,
     localSheetID,
+    increaseThreatLevel,
+    reduceThreatLevel,
+    increaseMomentum,
+    reduceMomentum,
     registerAsGMSheet,
   };
 });

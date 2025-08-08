@@ -11,7 +11,7 @@
       class="resource-counter__button resource-counter__button--subtract"
       aria-label="subtract"
       @click="decrement"
-    />
+    ></button>
     <input 
       :id="id ?? label"
       v-model="model"
@@ -22,7 +22,7 @@
       class="resource-counter__button resource-counter__button--add"
       aria-label="add"
       @click="increment"
-    />
+    ></button>
   </div>
 </template>
 

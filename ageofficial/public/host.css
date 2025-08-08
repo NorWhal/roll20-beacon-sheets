@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,400;0,600;0,700;1,200;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,400;0,600;0,700;1,200;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Martel+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,400;1,700&display=swap");
+html * {
+  --examplesheet-font-color: black;
+  --examplesheet-contrast-font-color: white;
+  --examplesheet-input-border: 1px solid #452b52;
+  --examplesheet-button-background-color: #452b52;
+  --examplesheet-section-border: 1px solid #452b52;
+  --examplesheet-primary: #1e4e7a;
+  --examplesheet-secondary: #ebd7ea;
+}
+
+rolltemplate.examplesheet {
+  display: block;
+  max-width: 100%;
+  border-radius: 0.5rem;
+  background: white;
+  color: black;
+}
+rolltemplate.examplesheet .header {
+  background: var(--examplesheet-primary);
+  text-align: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  color: white;
+}
+rolltemplate.examplesheet .header__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+rolltemplate.examplesheet .header__subtitle {
+  font-size: 1rem;
+}
+rolltemplate.examplesheet .body {
+  padding: 0.5rem;
+}
+rolltemplate.examplesheet .body hr {
+  margin: 0.5rem 0;
+}
+rolltemplate.examplesheet .body .trait-list {
+  display: flex;
+  gap: 0.5rem;
+}
+rolltemplate.examplesheet .body .trait-list .trait {
+  font-style: italic;
+}
+rolltemplate.examplesheet .key-values__pair {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  gap: 0.5rem;
+}
+rolltemplate.examplesheet .key-values__key {
+  font-weight: 600;
+}
+rolltemplate.examplesheet .roll__total {
+  text-align: center;
+}
+rolltemplate.examplesheet .roll__components {
+  display: flex;
+  flex-direction: column;
+}
+rolltemplate.examplesheet .roll__components .component__value {
+  font-weight: 600;
+}
+rolltemplate.examplesheet .damage-header {
+  background: var(--examplesheet-primary);
+  text-align: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+}
+rolltemplate.examplesheet .damage-header__title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  margin-left: 10px;
+}
+rolltemplate.examplesheet .damage-header__subtitle {
+  font-size: 1rem;
+}
+rolltemplate.examplesheet .arcana-test {
+  background: #1e4e7a;
+  color: #FFF;
+  padding: 5px 40px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+rolltemplate.examplesheet .age-spell-success {
+  color: green;
+}

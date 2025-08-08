@@ -21,6 +21,7 @@ import {
 } from './handlers/handlers';
 import { type GMAttr, gmAttrs } from './computed/gm';
 import { useStarTrekStore } from '@/sheet/stores';
+import { reRollAll } from '@/sheet/stores/rollStore/rollStore';
 import { updateGMResources } from '@/sheet/stores/gmStore/gmStore';
 
 /* 
@@ -44,9 +45,27 @@ const relayConfig = {
       See /src/rolltemplates/partials/heroDie.hbs for an example of how an action is performed.
       This one rolls 1d6, adds the result to a previous roll, and then prints the new result.
       Check out Marvel Multiverse RPG Edges for a more complex example.
-      ⭐ An important note is that the actions will not have access to any of the Pinia stores, so they need to be passed the necessary data or have access to it through the passed in character object.
+      ⭐ An important note is that the actions will not have access to any of 
+      the Pinia stores, so they need to be passed the necessary data or have 
+      access to it through the passed in character object.
      */
-
+    reRollAll: {
+      method: async (
+        props: {
+          dispatch: Dispatch;
+          character: Character;
+          messageId?: string;
+          dice?: Number;
+        },
+        ...args: string[]
+      ): Promise<void> => {
+        console.log(`In reRollAll function`);
+        console.log(`Reroll function arguments: ${JSON.stringify(args)}`);
+        console.log(`Reroll function props: ${JSON.stringify(props)}`);
+        const [characterName] = args;
+        return reRollAll(props);
+      },
+    },
   },
   computed: {
     ...gmAttrs(),
@@ -57,7 +76,7 @@ export type SharedSettings = {
   momentum?: number;
   threat?: number;
   gmID?: string;
-}
+};
 
 // This is the typescript type for the initial values that the sheet will use when it starts.
 export type InitValues = {
@@ -69,7 +88,7 @@ export type InitValues = {
 };
 
 // Almost everything below here is Boilerplate and you probably want to keep it intact.
-export const initValues: InitValues = reactive({
+export const initValues = reactive<InitValues>({
   id: '',
   character: {
     attributes: {},
@@ -141,20 +160,20 @@ export const createRelay = async ({
   const relayPinia = async (context: PiniaPluginContext) => {
     if (context.store.$id !== primaryStore) return;
     const store = context.store;
-    
+
     dispatchRef.value = dispatch;
-    
+
     // Init Store
     const { attributes, ...profile } = initValues.character;
     store.hydrateStore(attributes, profile);
 
-    console.log(JSON.stringify(initValues))
+    console.log(JSON.stringify(initValues));
 
     // Beacon Provides access to settings, like campaign id for example
     store.setCampaignId(initValues.settings.campaignId);
     store.setPermissions(initValues.settings.owned, initValues.settings.gm);
 
-    updateGMResources(initValues.sharedSettings)
+    updateGMResources(initValues.sharedSettings);
 
     // Watch for changes
     store.$subscribe(() => {
@@ -170,7 +189,7 @@ export const createRelay = async ({
       blockUpdate.value = true;
       if (logMode) console.log('🔒🔴 locking changes');
       const { attributes, ...profile } = dispatch.characters[characterId];
-      console.log("pulse watcher",attributes)
+      console.log('pulse watcher', attributes);
       if (attributes.updateId === sheetId.value) {
         blockUpdate.value = false;
         return;

@@ -1,5 +1,9 @@
 <template>
   <div class="star-trek-adventures-2e">
+    <div class="sheet-logo">
+      <img src="./common/assets/sta-logo-blue.png">
+      <img src="./common/assets/sta-adventures-blue.png">
+    </div>
     <div class="header">
       <div class="section__body tabs">
         <router-link :to="{ name: 'gm' }">

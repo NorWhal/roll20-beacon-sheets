@@ -1,6 +1,7 @@
 <template>
   <StatInterface 
-    v-for="stat in stats" 
+    v-for="(stat, key) in stats" 
+    :key
     :stat="stat"
   />
 </template>
@@ -21,12 +22,10 @@ const props = defineProps<StatInterfaceBlockProps>()
 const { statType } = props;
 
 const stats = computed<AttributeKey[] | DepartmentKey[]> (() => {
-  switch (statType) {
-    case 'Attribute': 
-      return AttributeKeys
-    case 'Department':
-      return DepartmentKeys
-  }
+  if (statType === "Attribute")
+    return AttributeKeys
+  else
+    return DepartmentKeys
 });
 
 </script>
