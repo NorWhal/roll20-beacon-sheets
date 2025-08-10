@@ -1,72 +1,72 @@
 <script setup lang="ts">
-import type { ActiveStats } from '@/sheet/stores/rollStore/rollStore'
-import type { AttributeKey, DepartmentKey } from '@/system/gameTerms'
-import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
-import { useRollStore } from '@/sheet/stores/rollStore/rollStore'
-import { AttributesEnum, DepartmentsEnum } from '@/system/gameTerms'
-import ResourceIncrementer from './ResourceIncrementer.vue'
+import type { ActiveStats } from "@/sheet/stores/rollStore/rollStore";
+import type { AttributeKey, DepartmentKey } from "@/system/gameTerms";
+import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
+import { useRollStore } from "@/sheet/stores/rollStore/rollStore";
+import { AttributesEnum, DepartmentsEnum } from "@/system/gameTerms";
+import ResourceIncrementer from "./ResourceIncrementer.vue";
 
-const rollStore = useRollStore()
+const rollStore = useRollStore();
 
 function readStat(stat: keyof ActiveStats) {
-  const value = rollStore.activeStats[stat]
-  return value
+  const value = rollStore.activeStats[stat];
+  return value;
 }
 
 const attribute = computed(() =>
-  readStat('attribute') as AttributeKey | undefined,
-)
+  readStat("attribute") as AttributeKey | undefined,
+);
 const department = computed(() =>
-  readStat('department') as DepartmentKey | undefined,
-)
+  readStat("department") as DepartmentKey | undefined,
+);
 
-const showFocus = ref(false)
+const showFocus = ref(false);
 
 const focus = computed({
   get() {
-    return rollStore.activeStats.focus
+    return rollStore.activeStats.focus;
   },
   set(value: string) {
-    rollStore.activeStats.focus = value
+    rollStore.activeStats.focus = value;
   },
-})
+});
 
 watch(focus, (newValue) => {
   if (newValue.length && !showFocus.value) {
-    showFocus.value = true
+    showFocus.value = true;
   }
   else if (!newValue.length) {
-    showFocus.value = false
+    showFocus.value = false;
   }
-})
+});
 
 const diceCounter = computed(() => {
   return rollStore.activeStats.baseDice
     + rollStore.activeStats.threatDice
-    + rollStore.activeStats.momentumDice
-})
+    + rollStore.activeStats.momentumDice;
+});
 
 const formStarted = computed(() => {
-  const state = (attribute.value || department.value || focus.value)
-  return state
-})
+  const state = (attribute.value || department.value || focus.value);
+  return state;
+});
 
-const focusInput = useTemplateRef('focus-input')
+const focusInput = useTemplateRef("focus-input");
 function toggleFocus() {
-  showFocus.value = !showFocus.value
+  showFocus.value = !showFocus.value;
   if (showFocus.value) {
-    nextTick(() => focusInput.value?.focus())
+    nextTick(() => focusInput.value?.focus());
   }
 }
 
 function clearReadout() {
-  rollStore.clearActiveStats()
-  showFocus.value = false
+  rollStore.clearActiveStats();
+  showFocus.value = false;
 }
 
 function deleteSavedRoll() {
-  rollStore.savedRolls.delete(rollStore.activeName)
-  clearReadout()
+  rollStore.savedRolls.delete(rollStore.activeName);
+  clearReadout();
 }
 </script>
 

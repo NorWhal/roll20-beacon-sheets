@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import type { ResourcesValue, RollModifiersValue } from '@/system/gameTerms'
-import { computed } from 'vue'
-import { isComplicationRange } from '@/system/gameTerms'
+import type { ResourcesValue, RollModifiersValue } from "@/system/gameTerms";
+import { computed } from "vue";
+import { isComplicationRange } from "@/system/gameTerms";
 
 export interface ResourceIncrementerProps {
-  resource: ResourcesValue | RollModifiersValue
+  resource: ResourcesValue | RollModifiersValue;
 }
-const props = defineProps<ResourceIncrementerProps>()
-const model = defineModel<number>({ required: true })
+const props = defineProps<ResourceIncrementerProps>();
+const model = defineModel<number>({ required: true });
 
-const isComplRange = isComplicationRange(props.resource)
+const isComplRange = isComplicationRange(props.resource);
 
-const minDecrement = isComplRange ? 1 : 0
-const decrementAllowed = computed(() => model.value > minDecrement)
+const minDecrement = isComplRange ? 1 : 0;
+const decrementAllowed = computed(() => model.value > minDecrement);
 function decrement() {
   if (decrementAllowed.value)
-    model.value--
+    model.value--;
 }
 
-const maxIncrement = isComplRange ? 5 : 3
-const incrementAllowed = computed(() => model.value < maxIncrement)
+const maxIncrement = isComplRange ? 5 : 3;
+const incrementAllowed = computed(() => model.value < maxIncrement);
 function increment() {
   if (incrementAllowed.value)
-    model.value++
+    model.value++;
 }
 </script>
 

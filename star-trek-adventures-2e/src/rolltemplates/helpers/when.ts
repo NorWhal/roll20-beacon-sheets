@@ -14,18 +14,18 @@ export function when(operand_1: string, operator: string, operand_2: string) {
 
    if (result) return options.fn(this);
    else  return options.inverse(this); */
-  const operand_l: number = Number.parseInt(operand_1)
-  const operand_r: number = Number.parseInt(operand_2)
-  console.log(`left ${operand_l} ${typeof operand_l} and right  ${operand_r} ${typeof operand_r}`)
+  const operand_l: number = Number.parseInt(operand_1);
+  const operand_r: number = Number.parseInt(operand_2);
+  console.log(`left ${operand_l} ${typeof operand_l} and right  ${operand_r} ${typeof operand_r}`);
   switch (operator) {
-    case ('eq') : return operand_l === operand_r
-    case ('noteq') : return operand_l !== operand_r
-    case ('gt') : return operand_l > operand_r
-    case ('gteq') : return operand_l >= operand_r
-    case ('lt') : return operand_l < operand_r
-    case ('lteq') : return operand_l <= operand_r
-    case ('or') : return operand_l || operand_r
-    case ('and') : return operand_l && operand_r
-    case ('%') : return operand_l % operand_r
+    case ("eq") : return operand_l === operand_r;
+    case ("noteq") : return operand_l !== operand_r;
+    case ("gt") : return operand_l > operand_r;
+    case ("gteq") : return operand_l >= operand_r;
+    case ("lt") : return operand_l < operand_r;
+    case ("lteq") : return operand_l <= operand_r;
+    case ("or") : return operand_l || operand_r;
+    case ("and") : return operand_l && operand_r;
+    case ("%") : return operand_l % operand_r;
   }
 }

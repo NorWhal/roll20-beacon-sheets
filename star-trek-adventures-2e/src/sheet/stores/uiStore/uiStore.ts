@@ -1,13 +1,13 @@
-import type { AttributeKey, DepartmentKey } from '@/system/gameTerms'
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import type { AttributeKey, DepartmentKey } from "@/system/gameTerms";
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useUIStore = defineStore('interface', () => {
-  const modifyingStat = ref<AttributeKey | DepartmentKey | undefined>()
-  const editMode = ref(false)
+export const useUIStore = defineStore("interface", () => {
+  const modifyingStat = ref<AttributeKey | DepartmentKey | undefined>();
+  const editMode = ref(false);
 
-  const dehydrate = () => {}
-  const hydrate = () => {}
+  const dehydrate = () => {};
+  const hydrate = () => {};
 
   return {
     editMode,
@@ -15,5 +15,5 @@ export const useUIStore = defineStore('interface', () => {
 
     dehydrate,
     hydrate,
-  }
-})
+  };
+});

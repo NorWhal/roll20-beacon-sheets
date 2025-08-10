@@ -1,1 +1,1 @@
-export { default as ResourceCounter } from './ResourceCounter.vue'
+export { default as ResourceCounter } from "./ResourceCounter.vue";

@@ -1,91 +1,91 @@
 <script setup lang="ts">
-import type { MessageModifier, StatModifier } from '@/sheet/stores/statsStore/statsStore'
-import type { AttributeKey, DepartmentKey } from '@/system/gameTerms'
-import { offset, useFloating } from '@floating-ui/vue'
-import { computed, ref } from 'vue'
-import { useRollStore } from '@/sheet/stores/rollStore/rollStore'
-import { useStatsStore } from '@/sheet/stores/statsStore/statsStore'
-import { useUIStore } from '@/sheet/stores/uiStore/uiStore'
-import { isAttributeKey, isDepartmentKey } from '@/system/gameTerms'
-import { getOperationSymbol } from '@/utility/getSymbols'
+import type { MessageModifier, StatModifier } from "@/sheet/stores/statsStore/statsStore";
+import type { AttributeKey, DepartmentKey } from "@/system/gameTerms";
+import { offset, useFloating } from "@floating-ui/vue";
+import { computed, ref } from "vue";
+import { useRollStore } from "@/sheet/stores/rollStore/rollStore";
+import { useStatsStore } from "@/sheet/stores/statsStore/statsStore";
+import { useUIStore } from "@/sheet/stores/uiStore/uiStore";
+import { isAttributeKey, isDepartmentKey } from "@/system/gameTerms";
+import { getOperationSymbol } from "@/utility/getSymbols";
 
 export interface StatInterfaceProps {
-  stat: AttributeKey | DepartmentKey
+  stat: AttributeKey | DepartmentKey;
 }
 
-const props = defineProps<StatInterfaceProps>()
+const props = defineProps<StatInterfaceProps>();
 
-const uiStore = useUIStore()
-const statsStore = useStatsStore()
-const rollStore = useRollStore()
+const uiStore = useUIStore();
+const statsStore = useStatsStore();
+const rollStore = useRollStore();
 
 const editing = computed(() => {
-  return uiStore.editMode
-})
+  return uiStore.editMode;
+});
 
-const { stat } = props
+const { stat } = props;
 
-const isAttribute = isAttributeKey(stat)
-const isDepartment = isDepartmentKey(stat)
-const total = computed(() => statsStore[stat])
+const isAttribute = isAttributeKey(stat);
+const isDepartment = isDepartmentKey(stat);
+const total = computed(() => statsStore[stat]);
 const label = computed(() => {
   if (isAttribute)
-    return statsStore.attributeFields[stat].label
+    return statsStore.attributeFields[stat].label;
   if (isDepartment)
-    return statsStore.departmentFields[stat].label
-  console.error('Stat unrecognized: ', stat)
-  return 'Error'
-})
+    return statsStore.departmentFields[stat].label;
+  console.error("Stat unrecognized: ", stat);
+  return "Error";
+});
 const modifiers = computed<(StatModifier | MessageModifier)[]>(() => {
-  let statField
+  let statField;
   if (isAttribute) {
-    statField = statsStore.attributeFields[stat]
+    statField = statsStore.attributeFields[stat];
   }
   if (isDepartment) {
-    statField = statsStore.departmentFields[stat]
+    statField = statsStore.departmentFields[stat];
   }
   if (statField?.modifiers && statField.modifiers.length > 0)
-    return statField.modifiers
-  return [{ note: `No ${label.value} Modifiers. Click to add some!` }]
-})
+    return statField.modifiers;
+  return [{ note: `No ${label.value} Modifiers. Click to add some!` }];
+});
 
 const statBase = computed({
   get: () => {
     if (isAttribute)
-      return statsStore.attributeFields[stat].base
+      return statsStore.attributeFields[stat].base;
     if (isDepartment)
-      return statsStore.departmentFields[stat].base
-    console.error('Stat unrecognized: ', stat)
-    return -1
+      return statsStore.departmentFields[stat].base;
+    console.error("Stat unrecognized: ", stat);
+    return -1;
   },
   set: (newValue) => {
     if (isAttribute)
-      statsStore.attributeFields[stat].base = newValue ?? 0
+      statsStore.attributeFields[stat].base = newValue ?? 0;
     if (isDepartment)
-      statsStore.departmentFields[stat].base = newValue ?? 0
+      statsStore.departmentFields[stat].base = newValue ?? 0;
   },
-})
+});
 
 function setModifyingToStat() {
-  uiStore.modifyingStat = stat
+  uiStore.modifyingStat = stat;
 }
 
 function setActiveToStat() {
   if (isAttribute)
-    rollStore.activeStats.attribute = stat
+    rollStore.activeStats.attribute = stat;
   else if (isDepartment)
-    rollStore.activeStats.department = stat
-  rollStore.activeStats.baseDice++
+    rollStore.activeStats.department = stat;
+  rollStore.activeStats.baseDice++;
 }
 
-const reference = ref(null)
-const floating = ref(null)
-const showTooltip = ref(false)
+const reference = ref(null);
+const floating = ref(null);
+const showTooltip = ref(false);
 
 const { floatingStyles } = useFloating(reference, floating, {
-  placement: 'right',
+  placement: "right",
   middleware: [offset(16)],
-})
+});
 </script>
 
 <template>

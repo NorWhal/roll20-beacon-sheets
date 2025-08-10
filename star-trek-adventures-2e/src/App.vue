@@ -1,8 +1,8 @@
 <script setup>
-import { useStarTrekStore } from './sheet/stores'
+import { useStarTrekStore } from "./sheet/stores";
 
-const store = useStarTrekStore()
-const campaignId = store.meta.campaignId
+const store = useStarTrekStore();
+const campaignId = store.meta.campaignId;
 </script>
 
 <template>

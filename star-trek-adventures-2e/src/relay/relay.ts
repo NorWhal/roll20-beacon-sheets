@@ -1,18 +1,18 @@
-import type { Character, CompendiumDragDropData, Dispatch, Settings, UpdateArgs } from '@roll20-official/beacon-sdk'
-import type { PiniaPluginContext } from 'pinia'
-import type { App, Ref } from 'vue'
+import type { Character, CompendiumDragDropData, Dispatch, Settings, UpdateArgs } from "@roll20-official/beacon-sdk";
+import type { PiniaPluginContext } from "pinia";
+import type { App, Ref } from "vue";
 import {
 
   initRelay,
 
-} from '@roll20-official/beacon-sdk'
+} from "@roll20-official/beacon-sdk";
 
-import { debounce } from 'lodash'
-import { v4 as uuidv4 } from 'uuid'
-import { nextTick, reactive, ref, watch } from 'vue'
-import { updateGMResources } from '@/sheet/stores/gmStore/gmStore'
-import { reRollAll } from '@/sheet/stores/rollStore/rollStore'
-import { gmAttrs } from './computed/gm'
+import { debounce } from "lodash";
+import { v4 as uuidv4 } from "uuid";
+import { nextTick, reactive, ref, watch } from "vue";
+import { updateGMResources } from "@/sheet/stores/gmStore/gmStore";
+import { reRollAll } from "@/sheet/stores/rollStore/rollStore";
+import { gmAttrs } from "./computed/gm";
 import {
   onChange,
   onDragOver,
@@ -20,7 +20,7 @@ import {
   onSettingsChange,
   onSharedSettingsChange,
   onTranslationsRequest,
-} from './handlers/handlers'
+} from "./handlers/handlers";
 
 /*
 This is the configuration for the relay. It defines the handlers and actions that the sheet will use.
@@ -50,62 +50,62 @@ const relayConfig = {
     reRollAll: {
       method: async (
         props: {
-          dispatch: Dispatch
-          character: Character
-          messageId?: string
-          dice?: number
+          dispatch: Dispatch;
+          character: Character;
+          messageId?: string;
+          dice?: number;
         },
         ...args: string[]
       ): Promise<void> => {
-        console.log(`In reRollAll function`)
-        console.log(`Reroll function arguments: ${JSON.stringify(args)}`)
-        console.log(`Reroll function props: ${JSON.stringify(props)}`)
-        const [characterName] = args
-        return reRollAll(props)
+        console.log(`In reRollAll function`);
+        console.log(`Reroll function arguments: ${JSON.stringify(args)}`);
+        console.log(`Reroll function props: ${JSON.stringify(props)}`);
+        const [characterName] = args;
+        return reRollAll(props);
       },
     },
   },
   computed: {
     ...gmAttrs(),
   },
-}
+};
 
 export interface SharedSettings {
-  momentum?: number
-  threat?: number
-  gmID?: string
+  momentum?: number;
+  threat?: number;
+  gmID?: string;
 }
 
 // This is the typescript type for the initial values that the sheet will use when it starts.
 export interface InitValues {
-  id: string
-  character: Character
-  settings: Settings
-  sharedSettings: SharedSettings
-  compendiumDrop: CompendiumDragDropData | null
+  id: string;
+  character: Character;
+  settings: Settings;
+  sharedSettings: SharedSettings;
+  compendiumDrop: CompendiumDragDropData | null;
 }
 
 // Almost everything below here is Boilerplate and you probably want to keep it intact.
 export const initValues = reactive<InitValues>({
-  id: '',
+  id: "",
   character: {
     attributes: {},
   } as Character,
   settings: {} as Settings,
   sharedSettings: {} as SharedSettings,
   compendiumDrop: null,
-})
+});
 
 /*
 We use refs to keep track of the state of the sheet.
 This is a way to keep track of the state of the sheet in a reactive way.
 */
-export const beaconPulse = ref(0)
-export const blockUpdate = ref(false)
-export const dispatchRef = ref()
-export const dropUpdate: Ref<Dispatch> = ref({} as Dispatch)
-export const settingsSheet = ref(false)
-const sheetId = ref(uuidv4())
+export const beaconPulse = ref(0);
+export const blockUpdate = ref(false);
+export const dispatchRef = ref();
+export const dropUpdate: Ref<Dispatch> = ref({} as Dispatch);
+export const settingsSheet = ref(false);
+const sheetId = ref(uuidv4());
 
 /*
 This is the function that is called when the character data is updated.
@@ -113,21 +113,21 @@ logMode is a flag that can be used to log the updates to the console. This is us
 */
 function doUpdate(dispatch: Dispatch, update: Record<string, any>, logMode = false) {
   if (logMode)
-    console.info('➡️ ExampleSheet: Updating Firebase')
+    console.info("➡️ ExampleSheet: Updating Firebase");
   if (logMode)
-    console.dir(`Firebase Update: ${initValues.character.id}`, update)
+    console.dir(`Firebase Update: ${initValues.character.id}`, update);
   const character: Record<string, any> = {
     character: {
       id: initValues.character.id,
       ...update,
     },
-  }
-  character.character.attributes.updateId = sheetId.value
-  dispatch.updateCharacter(character as UpdateArgs)
+  };
+  character.character.attributes.updateId = sheetId.value;
+  dispatch.updateCharacter(character as UpdateArgs);
 }
 
 // This is a debounced version of the update function that will only be called after 800ms of inactivity.
-const debounceUpdate = debounce(doUpdate, 800)
+const debounceUpdate = debounce(doUpdate, 800);
 
 /*
 Dev relay is used to run the sheet in a web browser
@@ -136,11 +136,11 @@ This is useful for testing the sheet without having to connect to the server.
 */
 async function devRelay() {
   return {
-    update: (...args: any[]) => console.log('devRelay update', args),
-    updateCharacter: (...args: any[]) => console.log('devRelay updateCharacter', args),
+    update: (...args: any[]) => console.log("devRelay update", args),
+    updateCharacter: (...args: any[]) => console.log("devRelay updateCharacter", args),
     characters: {},
-    updateTokensByCharacter: () => '',
-  } as any as Dispatch
+    updateTokensByCharacter: () => "",
+  } as any as Dispatch;
 }
 
 /*
@@ -153,72 +153,72 @@ This is just one way to trigger a re-render, you can implement your own logic to
 */
 export async function createRelay({
   devMode = false,
-  primaryStore = 'StarTrek',
+  primaryStore = "StarTrek",
   logMode = false,
 }) {
   // @ts-ignore
-  const dispatch = await (devMode ? devRelay() : initRelay(relayConfig))
+  const dispatch = await (devMode ? devRelay() : initRelay(relayConfig));
   const relayPinia = async (context: PiniaPluginContext) => {
     if (context.store.$id !== primaryStore)
-      return
-    const store = context.store
+      return;
+    const store = context.store;
 
-    dispatchRef.value = dispatch
+    dispatchRef.value = dispatch;
 
     // Init Store
-    const { attributes, ...profile } = initValues.character
-    store.hydrateStore(attributes, profile)
+    const { attributes, ...profile } = initValues.character;
+    store.hydrateStore(attributes, profile);
 
-    console.log(JSON.stringify(initValues))
+    console.log(JSON.stringify(initValues));
 
     // Beacon Provides access to settings, like campaign id for example
-    store.setCampaignId(initValues.settings.campaignId)
-    store.setPermissions(initValues.settings.owned, initValues.settings.gm)
+    store.setCampaignId(initValues.settings.campaignId);
+    store.setPermissions(initValues.settings.owned, initValues.settings.gm);
 
-    updateGMResources(initValues.sharedSettings)
+    updateGMResources(initValues.sharedSettings);
 
     // Watch for changes
     store.$subscribe(() => {
       if (blockUpdate.value === true)
-        return
-      const update = store.dehydrateStore()
-      debounceUpdate(dispatch, update, logMode)
-    })
+        return;
+      const update = store.dehydrateStore();
+      debounceUpdate(dispatch, update, logMode);
+    });
 
     // Watch for changes from the Beacon SDK, triggered everytime the Beacon Pulse value changes
     watch(beaconPulse, async (newValue, oldValue) => {
       if (logMode)
-        console.log('❤️ Beacon Pulse', { newValue, oldValue })
-      const characterId = initValues.character.id
-      blockUpdate.value = true
+        console.log("❤️ Beacon Pulse", { newValue, oldValue });
+      const characterId = initValues.character.id;
+      blockUpdate.value = true;
       if (logMode)
-        console.log('🔒🔴 locking changes')
-      const { attributes, ...profile } = dispatch.characters[characterId]
-      console.log('pulse watcher', attributes)
+        console.log("🔒🔴 locking changes");
+      const { attributes, ...profile } = dispatch.characters[characterId];
+      console.log("pulse watcher", attributes);
       if (attributes.updateId === sheetId.value) {
-        blockUpdate.value = false
-        return
+        blockUpdate.value = false;
+        return;
       }
-      store.hydrateStore(attributes, profile)
-      await nextTick()
+      store.hydrateStore(attributes, profile);
+      await nextTick();
       if (logMode)
-        console.log('🔓🟢 unlocking changes')
-      blockUpdate.value = false
-    })
+        console.log("🔓🟢 unlocking changes");
+      blockUpdate.value = false;
+    });
 
     return {
       ...dispatch,
-    }
-  }
+    };
+  };
 
   const relayVue = {
     install(app: App) {
-      app.provide('dispatch', dispatch)
+      app.provide("dispatch", dispatch);
     },
-  }
+  };
 
   return {
     relayPinia,
     relayVue,
-  }
+  };
 }

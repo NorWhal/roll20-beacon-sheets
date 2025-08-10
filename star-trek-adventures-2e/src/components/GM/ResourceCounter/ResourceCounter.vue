@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
 export interface ResourceCounterProps {
-  id: string
-  label: string
+  id: string;
+  label: string;
   modelValue: {
-    value: number
-  }
+    value: number;
+  };
 }
-const props = defineProps<ResourceCounterProps>()
+const props = defineProps<ResourceCounterProps>();
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
 const model = computed({
   get() {
-    return props.modelValue.value
+    return props.modelValue.value;
   },
   set(newValue) {
-    emit('update:modelValue', { key: 'value', value: newValue })
+    emit("update:modelValue", { key: "value", value: newValue });
   },
-})
+});
 
 function increment() {
-  emit('update:modelValue', { key: 'value', value: model.value + 1 })
+  emit("update:modelValue", { key: "value", value: model.value + 1 });
 }
 function decrement() {
-  emit('update:modelValue', { key: 'value', value: model.value - 1 })
+  emit("update:modelValue", { key: "value", value: model.value - 1 });
 }
 </script>
 

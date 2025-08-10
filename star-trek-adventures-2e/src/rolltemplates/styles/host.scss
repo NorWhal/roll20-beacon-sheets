@@ -1,3 +1,4 @@
+@use "sass:math";
 @use '../../common/scss/vars.scss';
 
 @use './rolls.scss';
@@ -35,8 +36,6 @@ rolltemplate.sta2 {
     -webkit-text-stroke: 1px #fff4;
     box-shadow: 0 0 2px 1px var(--rolltemplate-text-color);
   }
-
-  filter: brightness(1.125) contrast(150%);
 
   .info {
     display: grid;
@@ -174,17 +173,33 @@ rolltemplate.sta2 {
         width: 100%;
         box-sizing: border-box;
 
-        text-align: center;
+        text-align: end;
         text-wrap: wrap;
         padding: 2px;
-        font-size: 1rem;
+        font-size: 0.825rem;
         font-weight: 700;
         color: black;
+      }
+    }
 
-        @for $n from 2 through 7 {
+    &__top-sidebar {
+      li {
+        @for $n from 2 through 6 {
+          $c: $n - 1;
           &:nth-child(#{$n}) {
             border-top: 2px solid var(--rolltemplate-background-color);
-            background-color: var(--bottom-sidebar-item-#{$n});
+            background-color: var(--top-sidebar-item-#{$c});
+          }
+        }
+      }
+    }
+    &__bottom-sidebar {
+      li {
+        @for $n from 2 through 6 {
+          $c: $n - 1;
+          &:nth-child(#{$n}) {
+            border-top: 2px solid var(--rolltemplate-background-color);
+            background-color: var(--bottom-sidebar-item-#{$c});
           }
         }
       }

@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import PCView from '@/views/PCView.vue'
-import GMView from '../views/GMView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import PCView from "@/views/PCView.vue";
+import GMView from "../views/GMView.vue";
 
 /*
  * Vue Router is used for switching between the 2 different views in the sheet.
@@ -11,15 +11,15 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/gm',
-      name: 'gm',
+      path: "/gm",
+      name: "gm",
       component: GMView,
     },
     {
-      path: '/pc',
-      name: 'pc',
+      path: "/pc",
+      name: "pc",
       component: PCView,
     },
   ],
-})
-export default router
+});
+export default router;

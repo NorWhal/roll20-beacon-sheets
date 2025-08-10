@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { ResourceCounter } from '@/components/GM/ResourceCounter'
-import { initValues } from '@/relay/relay'
-import { useGMStore } from '@/sheet/stores/gmStore/gmStore'
+import { computed } from "vue";
+import { ResourceCounter } from "@/components/GM/ResourceCounter";
+import { initValues } from "@/relay/relay";
+import { useGMStore } from "@/sheet/stores/gmStore/gmStore";
 
-const gmStore = useGMStore()
+const gmStore = useGMStore();
 
 const momentum = computed({
-  get() { return gmStore.resources.momentum },
+  get() { return gmStore.resources.momentum; },
   set(newValue) {
-    gmStore.resources.momentum = newValue
+    gmStore.resources.momentum = newValue;
   },
-})
+});
 
 const threat = computed({
-  get() { return gmStore.resources.threat },
+  get() { return gmStore.resources.threat; },
   set(newValue) {
-    gmStore.resources.threat = newValue
+    gmStore.resources.threat = newValue;
   },
-})
+});
 
-const initValsComputed = computed(() => initValues)
+const initValsComputed = computed(() => initValues);
 </script>
 
 <template>

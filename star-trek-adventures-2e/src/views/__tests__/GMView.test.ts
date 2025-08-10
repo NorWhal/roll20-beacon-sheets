@@ -1,159 +1,159 @@
-import { createTestingPinia } from '@pinia/testing'
-import { cleanup, render, screen } from '@testing-library/vue'
-import { setActivePinia } from 'pinia'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useGMStore } from '@/sheet/stores/gmStore/gmStore'
-import GMView from '../GMView.vue'
+import { createTestingPinia } from "@pinia/testing";
+import { cleanup, render, screen } from "@testing-library/vue";
+import { setActivePinia } from "pinia";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useGMStore } from "@/sheet/stores/gmStore/gmStore";
+import GMView from "../GMView.vue";
 
 const mocks = vi.hoisted(() => ({
   initValues: {
-    id: '-OC2OejKpN73CDracHa_',
+    id: "-OC2OejKpN73CDracHa_",
     character: {
-      id: '-OC2OejKpN73CDracHa_',
-      name: 'Lenaris D\'Myrra',
-      avatar: '',
+      id: "-OC2OejKpN73CDracHa_",
+      name: "Lenaris D'Myrra",
+      avatar: "",
       attributes: {
         gm: {
-          localSheetID: '-OC2OejKpN73CDracHa_',
+          localSheetID: "-OC2OejKpN73CDracHa_",
           momentum: 2,
           threat: 2,
         },
         roll: {
           rolls: {
-            'Other Science!': {
-              attribute: 'REASON',
-              department: 'SCIENCE',
+            "Other Science!": {
+              attribute: "REASON",
+              department: "SCIENCE",
             },
           },
         },
         stats: {
           COMMAND: {
             base: 2,
-            label: 'Command',
+            label: "Command",
           },
           CONN: {
             base: 2,
-            label: 'Conn',
+            label: "Conn",
           },
           CONTROL: {
             base: 9,
-            label: 'Control',
+            label: "Control",
           },
           DARING: {
             base: 9,
-            label: 'Daring',
+            label: "Daring",
           },
           ENGINEERING: {
             base: 2,
-            label: 'Engineering',
+            label: "Engineering",
           },
           FITNESS: {
             base: 8,
-            label: 'Fitness',
+            label: "Fitness",
           },
           INSIGHT: {
             base: 11,
-            label: 'Insight',
+            label: "Insight",
           },
           MEDICINE: {
             base: 4,
-            label: 'Medicine',
+            label: "Medicine",
           },
           PRESENCE: {
             base: 10,
-            label: 'Presence',
+            label: "Presence",
           },
           REASON: {
             base: 10,
-            label: 'Reason',
+            label: "Reason",
           },
           SCIENCE: {
             base: 4,
-            label: 'Science',
+            label: "Science",
           },
           SECURITY: {
             base: 2,
-            label: 'Security',
+            label: "Security",
           },
         },
         ui: null,
-        updateId: '69b1635d-6115-481c-90c2-d788dd4e66dc',
+        updateId: "69b1635d-6115-481c-90c2-d788dd4e66dc",
       },
       bio: null,
       gmNotes: null,
       token: {
-        name: 'Lenaris D\'Myrra',
-        represents: '-OC2OejKpN73CDracHa_',
-        imgsrc: '/images/character.png',
+        name: "Lenaris D'Myrra",
+        represents: "-OC2OejKpN73CDracHa_",
+        imgsrc: "/images/character.png",
         width: 70,
         height: 70,
-        layer: 'objects',
+        layer: "objects",
       },
     },
     settings: {
-      colorTheme: 'dark',
-      language: 'en',
+      colorTheme: "dark",
+      language: "en",
       gm: true,
       owned: true,
       headless: false,
       sandbox: false,
       settingsSheet: false,
       singleSheet: false,
-      environment: 'VTT',
-      discordActivityClientId: '1199271093882589195',
+      environment: "VTT",
+      discordActivityClientId: "1199271093882589195",
       campaignId: 17521251,
-      currentUserId: '11818687',
+      currentUserId: "11818687",
     },
     sharedSettings: {
       momentum: 4,
       threat: 2,
-      gmID: '-O6EOAgXKX_6FD6z3pTm',
+      gmID: "-O6EOAgXKX_6FD6z3pTm",
     },
     compendiumDrop: null,
   },
-}))
+}));
 
-vi.mock('@/relay/relay', () => ({
+vi.mock("@/relay/relay", () => ({
   initValues: mocks.initValues,
-}))
+}));
 
 function doRender() {
-  const mounted = render(GMView, {})
-  return mounted
+  const mounted = render(GMView, {});
+  return mounted;
 }
 
-describe('gM View', () => {
+describe("gM View", () => {
   beforeEach(() => {
-    cleanup()
+    cleanup();
     setActivePinia(
       createTestingPinia({
         createSpy: vi.fn,
         stubActions: false,
         stubPatch: false,
       }),
-    )
-    mocks.initValues.settings.gm = false
-  })
+    );
+    mocks.initValues.settings.gm = false;
+  });
 
-  it('should show displays when the sheet is not registered as a GM', async () => {
-    doRender()
-    await screen.findByTestId('momentum-display')
-    const momentum_input = await screen.queryByTestId('momentum-input')
-    expect(momentum_input).toBeNull()
-    await screen.findByTestId('threat-display')
-    const threat_input = await screen.queryByTestId('threat-input')
-    expect(threat_input).toBeNull()
-  })
-  it('should show inputs when I have gm permissions', async () => {
-    const gmStore = useGMStore()
-    gmStore.localSheetID = 'sheet!'
-    mocks.initValues.sharedSettings.gmID = 'sheet!'
-    doRender()
-    await screen.findByTestId('momentum-input')
-    const momentum_display = await screen.queryByTestId('momentum-display')
-    expect(momentum_display).toBeNull()
-    await screen.findByTestId('threat-input')
-    const threat_display = await screen.queryByTestId('threat-display')
-    expect(threat_display).toBeNull()
-  })
-})
+  it("should show displays when the sheet is not registered as a GM", async () => {
+    doRender();
+    await screen.findByTestId("momentum-display");
+    const momentum_input = await screen.queryByTestId("momentum-input");
+    expect(momentum_input).toBeNull();
+    await screen.findByTestId("threat-display");
+    const threat_input = await screen.queryByTestId("threat-input");
+    expect(threat_input).toBeNull();
+  });
+  it("should show inputs when I have gm permissions", async () => {
+    const gmStore = useGMStore();
+    gmStore.localSheetID = "sheet!";
+    mocks.initValues.sharedSettings.gmID = "sheet!";
+    doRender();
+    await screen.findByTestId("momentum-input");
+    const momentum_display = await screen.queryByTestId("momentum-display");
+    expect(momentum_display).toBeNull();
+    await screen.findByTestId("threat-input");
+    const threat_display = await screen.queryByTestId("threat-display");
+    expect(threat_display).toBeNull();
+  });
+});

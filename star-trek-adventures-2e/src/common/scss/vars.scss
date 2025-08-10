@@ -1,8 +1,9 @@
+@use "sass:color";
 
 $federation-blue: #c8e0ec;
-$federation-blue-125: darken($federation-blue, 25%);
-$federation-blue-50: lighten($federation-blue, 50%);
-$federation-blue-25: lighten($federation-blue, 75%);
+$federation-blue-125: color.adjust($federation-blue, $lightness: -25%);
+$federation-blue-50: color.adjust($federation-blue, $lightness: 50%);
+$federation-blue-25: color.adjust($federation-blue, $lightness: 75%);
 $federation-grey: #4f4f4f;
 $federation-silver: #A5A5A5;
 $federation-beige: #dfdfdf;
@@ -11,6 +12,12 @@ $federation-beige-25: #dfdfdf40;
 $federation-eng-red: #c82b2b;
 $federation-comm-yellow: #d4a414;
 $federation-sci-blue: #4393bc;
+
+$lcars-color-1: #c44;
+$lcars-color-2: #f80;
+$lcars-color-3: #f96;
+$lcars-color-4: #89f;
+$lcars-color-5: #c9f;
 
 html {
   --switch-disabled: grey;
@@ -41,19 +48,17 @@ html {
   --rolltemplate-text-color-3: #c74825;
   --lcars-sidebar-radius: min(64px, 100%);
 
-  --top-sidebar: #86d;
-  --top-sidebar-item-1: #7851D9;
-  --top-sidebar-item-2: #693FD5;
-  --top-sidebar-item-3: #5B2DCF;
-  --top-sidebar-item-4: #5329BC;
-  --top-sidebar-item-5: #4B25A9;
-  --top-sidebar-item-6: #422197;
+  --top-sidebar: #{$lcars-color-5};
+  --top-sidebar-item-1: #{$lcars-color-5};
+  --top-sidebar-item-2: #{$lcars-color-4};
+  --top-sidebar-item-3: #{$lcars-color-3};
+  --top-sidebar-item-4: #{$lcars-color-2};
+  --top-sidebar-item-5: #{$lcars-color-1};
 
-  --bottom-sidebar: #d68;
-  --bottom-sidebar-item-1: #D95178;
-  --bottom-sidebar-item-2: #D53F69;
-  --bottom-sidebar-item-3: #CF2D5B;
-  --bottom-sidebar-item-4: #BC2953;
-  --bottom-sidebar-item-5: #A9254B;
-  --bottom-sidebar-item-6: #972142;
+  --bottom-sidebar: #{$lcars-color-1};
+  --bottom-sidebar-item-1: #{$lcars-color-1};
+  --bottom-sidebar-item-2: #{$lcars-color-2};
+  --bottom-sidebar-item-3: #{$lcars-color-3};
+  --bottom-sidebar-item-4: #{$lcars-color-4};
+  --bottom-sidebar-item-5: #{$lcars-color-5};
 }

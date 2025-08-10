@@ -1,3 +1,3 @@
 export function isIterable(x: unknown): x is any[] {
-  return Array.isArray(x) && x.length > 0
+  return Array.isArray(x) && x.length > 0;
 }

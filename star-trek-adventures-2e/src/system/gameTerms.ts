@@ -1,107 +1,107 @@
 // region Attributes
 export const AttributesEnum = {
-  CONTROL: 'Control',
-  FITNESS: 'Fitness',
-  PRESENCE: 'Presence',
-  DARING: 'Daring',
-  INSIGHT: 'Insight',
-  REASON: 'Reason',
-} as const
+  CONTROL: "Control",
+  FITNESS: "Fitness",
+  PRESENCE: "Presence",
+  DARING: "Daring",
+  INSIGHT: "Insight",
+  REASON: "Reason",
+} as const;
 
-export type AttributeKey = keyof typeof AttributesEnum
-export const AttributeKeys = Object.keys(AttributesEnum) as AttributeKey[]
-export const isAttributeKey = (key: string): key is AttributeKey => key in AttributesEnum
+export type AttributeKey = keyof typeof AttributesEnum;
+export const AttributeKeys = Object.keys(AttributesEnum) as AttributeKey[];
+export const isAttributeKey = (key: string): key is AttributeKey => key in AttributesEnum;
 
-export type AttributeValue = (typeof AttributesEnum)[AttributeKey]
-export const AttributeValues = Object.values(AttributesEnum) as AttributeValue[]
-export const isAttributeValue = (value: string): value is AttributeValue => AttributeValues.includes(value as AttributeValue)
+export type AttributeValue = (typeof AttributesEnum)[AttributeKey];
+export const AttributeValues = Object.values(AttributesEnum) as AttributeValue[];
+export const isAttributeValue = (value: string): value is AttributeValue => AttributeValues.includes(value as AttributeValue);
 
 // region Departments
 export const DepartmentsEnum = {
-  COMMAND: 'Command',
-  ENGINEERING: 'Engineering',
-  MEDICINE: 'Medicine',
-  CONN: 'Conn',
-  SECURITY: 'Security',
-  SCIENCE: 'Science',
-} as const
+  COMMAND: "Command",
+  ENGINEERING: "Engineering",
+  MEDICINE: "Medicine",
+  CONN: "Conn",
+  SECURITY: "Security",
+  SCIENCE: "Science",
+} as const;
 
-export type DepartmentKey = keyof typeof DepartmentsEnum
-export const DepartmentKeys = Object.keys(DepartmentsEnum) as DepartmentKey[]
-export const isDepartmentKey = (key: string): key is DepartmentKey => key in DepartmentsEnum
+export type DepartmentKey = keyof typeof DepartmentsEnum;
+export const DepartmentKeys = Object.keys(DepartmentsEnum) as DepartmentKey[];
+export const isDepartmentKey = (key: string): key is DepartmentKey => key in DepartmentsEnum;
 
-export type DepartmentValue = (typeof DepartmentsEnum)[DepartmentKey]
-export const DepartmentValues = Object.values(DepartmentsEnum) as DepartmentValue[]
-export const isDepartmentValue = (value: string): value is DepartmentValue => DepartmentValues.includes(value as DepartmentValue)
+export type DepartmentValue = (typeof DepartmentsEnum)[DepartmentKey];
+export const DepartmentValues = Object.values(DepartmentsEnum) as DepartmentValue[];
+export const isDepartmentValue = (value: string): value is DepartmentValue => DepartmentValues.includes(value as DepartmentValue);
 
 // region Conditions
 /** Stats dealing with the current meta state of an individual character */
 export const ConditionsEnum = {
-  DETERMINATION: 'Determination',
-  STRESS: 'Stress',
-} as const
-export type ConditionsKey = keyof typeof ConditionsEnum
-export const ConditionsKeys = Object.keys(ConditionsEnum) as ConditionsKey[]
-export const isConditionsKey = (key: string): key is ConditionsKey => key in ConditionsEnum
+  DETERMINATION: "Determination",
+  STRESS: "Stress",
+} as const;
+export type ConditionsKey = keyof typeof ConditionsEnum;
+export const ConditionsKeys = Object.keys(ConditionsEnum) as ConditionsKey[];
+export const isConditionsKey = (key: string): key is ConditionsKey => key in ConditionsEnum;
 
-export type ConditionsValue = (typeof ConditionsEnum)[ConditionsKey]
-export const ConditionsValues = Object.values(ConditionsEnum) as ConditionsValue[]
-export const isConditionsValue = (value: string): value is ConditionsValue => ConditionsValues.includes(value as ConditionsValue)
+export type ConditionsValue = (typeof ConditionsEnum)[ConditionsKey];
+export const ConditionsValues = Object.values(ConditionsEnum) as ConditionsValue[];
+export const isConditionsValue = (value: string): value is ConditionsValue => ConditionsValues.includes(value as ConditionsValue);
 
 // region Resources
 /** Stats dealing with the current meta state of the scene/party */
 export const ResourcesEnum = {
-  THREAT: 'Threat',
-  MOMENTUM: 'Momentum',
-} as const
-export type ResourcesKey = keyof typeof ResourcesEnum
-export const ResourcesKeys = Object.keys(ResourcesEnum) as ResourcesKey[]
-export const isResourcesKey = (key: string): key is ResourcesKey => key in ResourcesEnum
-export type ResourcesValue = (typeof ResourcesEnum)[ResourcesKey]
-export const ResourcesValues = Object.values(ResourcesEnum) as ResourcesValue[]
-export const isResourcesValue = (value: string): value is ResourcesValue => ResourcesValues.includes(value as ResourcesValue)
+  THREAT: "Threat",
+  MOMENTUM: "Momentum",
+} as const;
+export type ResourcesKey = keyof typeof ResourcesEnum;
+export const ResourcesKeys = Object.keys(ResourcesEnum) as ResourcesKey[];
+export const isResourcesKey = (key: string): key is ResourcesKey => key in ResourcesEnum;
+export type ResourcesValue = (typeof ResourcesEnum)[ResourcesKey];
+export const ResourcesValues = Object.values(ResourcesEnum) as ResourcesValue[];
+export const isResourcesValue = (value: string): value is ResourcesValue => ResourcesValues.includes(value as ResourcesValue);
 
 // region roll modifiers
 /** Stats dealing with the current meta state of the scene/party */
 export const RollModifiersEnum = {
-  COMPLICATIONRANGE: 'Complication range',
-  DETERMINATIONDICE: 'Determination',
-} as const
-export type RollModifiersKey = keyof typeof RollModifiersEnum
-export const RollModifiersKeys = Object.keys(RollModifiersEnum) as RollModifiersKey[]
-export const isRollModifiersKey = (key: string): key is RollModifiersKey => key in RollModifiersEnum
-export type RollModifiersValue = (typeof RollModifiersEnum)[RollModifiersKey]
-export const RollModifiersValues = Object.values(RollModifiersEnum) as RollModifiersValue[]
-export const isRollModifiersValue = (value: string): value is RollModifiersValue => RollModifiersValues.includes(value as RollModifiersValue)
-export const isComplicationRange = (value: string): value is RollModifiersValue => value === RollModifiersEnum.COMPLICATIONRANGE
-export const isDeterminationDice = (value: string): value is RollModifiersValue => value === RollModifiersEnum.DETERMINATIONDICE
+  COMPLICATIONRANGE: "Complication range",
+  DETERMINATIONDICE: "Determination",
+} as const;
+export type RollModifiersKey = keyof typeof RollModifiersEnum;
+export const RollModifiersKeys = Object.keys(RollModifiersEnum) as RollModifiersKey[];
+export const isRollModifiersKey = (key: string): key is RollModifiersKey => key in RollModifiersEnum;
+export type RollModifiersValue = (typeof RollModifiersEnum)[RollModifiersKey];
+export const RollModifiersValues = Object.values(RollModifiersEnum) as RollModifiersValue[];
+export const isRollModifiersValue = (value: string): value is RollModifiersValue => RollModifiersValues.includes(value as RollModifiersValue);
+export const isComplicationRange = (value: string): value is RollModifiersValue => value === RollModifiersEnum.COMPLICATIONRANGE;
+export const isDeterminationDice = (value: string): value is RollModifiersValue => value === RollModifiersEnum.DETERMINATIONDICE;
 
 // region Advancement
 const AdvancementTypesEnum = {
-  LOG: 'Log',
-  MILESTONE: 'Milestone',
-  ARC: 'Arc',
-} as const
+  LOG: "Log",
+  MILESTONE: "Milestone",
+  ARC: "Arc",
+} as const;
 
-export type AdvancementTypeKey = keyof typeof AdvancementTypesEnum
-export const AdvancementTypeKeys = Object.keys(AdvancementTypesEnum) as AdvancementTypeKey[]
-export const isAdvancementTypeKey = (key: string): key is AdvancementTypeKey => AdvancementTypeKeys.includes(key as AdvancementTypeKey)
+export type AdvancementTypeKey = keyof typeof AdvancementTypesEnum;
+export const AdvancementTypeKeys = Object.keys(AdvancementTypesEnum) as AdvancementTypeKey[];
+export const isAdvancementTypeKey = (key: string): key is AdvancementTypeKey => AdvancementTypeKeys.includes(key as AdvancementTypeKey);
 
-export type AdvancementTypeValue = (typeof AdvancementTypesEnum)[AdvancementTypeKey]
-export const AdvancementTypeValues = Object.values(AdvancementTypesEnum) as AdvancementTypeValue[]
-export const isAdvancementTypeValue = (value: string): value is AdvancementTypeValue => AdvancementTypeValues.includes(value as AdvancementTypeValue)
+export type AdvancementTypeValue = (typeof AdvancementTypesEnum)[AdvancementTypeKey];
+export const AdvancementTypeValues = Object.values(AdvancementTypesEnum) as AdvancementTypeValue[];
+export const isAdvancementTypeValue = (value: string): value is AdvancementTypeValue => AdvancementTypeValues.includes(value as AdvancementTypeValue);
 
 /** How values can be invoked, per Milestone entry directions (CRB p. 166) */
 const ValueInvocationsEnum = {
-  POSITIVE: '+',
-  NEGATIVE: '-',
-  CHALLENGE: '!',
-} as const
+  POSITIVE: "+",
+  NEGATIVE: "-",
+  CHALLENGE: "!",
+} as const;
 
-export type ValueInvocationKey = keyof typeof ValueInvocationsEnum
-export const ValueInvocationKeys = Object.keys(ValueInvocationsEnum) as ValueInvocationKey[]
-export const isValueInvocationKey = (key: string): key is ValueInvocationKey => ValueInvocationKeys.includes(key as ValueInvocationKey)
+export type ValueInvocationKey = keyof typeof ValueInvocationsEnum;
+export const ValueInvocationKeys = Object.keys(ValueInvocationsEnum) as ValueInvocationKey[];
+export const isValueInvocationKey = (key: string): key is ValueInvocationKey => ValueInvocationKeys.includes(key as ValueInvocationKey);
 
-export type ValueInvocationValue = (typeof ValueInvocationsEnum)[ValueInvocationKey]
-export const ValueInvocationValues = Object.values(ValueInvocationsEnum) as ValueInvocationValue[]
-export const isValueInvocationValue = (value: string): value is ValueInvocationValue => ValueInvocationValues.includes(value as ValueInvocationValue)
+export type ValueInvocationValue = (typeof ValueInvocationsEnum)[ValueInvocationKey];
+export const ValueInvocationValues = Object.values(ValueInvocationsEnum) as ValueInvocationValue[];
+export const isValueInvocationValue = (value: string): value is ValueInvocationValue => ValueInvocationValues.includes(value as ValueInvocationValue);

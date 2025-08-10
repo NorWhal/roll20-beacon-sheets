@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useUIStore } from '@/sheet/stores/uiStore/uiStore'
-import StatInterfaceBlock from './StatInterface/StatInterfaceBlock.vue'
+import { computed } from "vue";
+import { useUIStore } from "@/sheet/stores/uiStore/uiStore";
+import StatInterfaceBlock from "./StatInterface/StatInterfaceBlock.vue";
 
-const uiStore = useUIStore()
-const editMode = computed(() => uiStore.editMode ? 'edit' : 'view')
+const uiStore = useUIStore();
+const editMode = computed(() => uiStore.editMode ? "edit" : "view");
 </script>
 
 <template>
