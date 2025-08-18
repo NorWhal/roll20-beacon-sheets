@@ -1,31 +1,3 @@
-<script setup lang="ts">
-import type { ResourcesValue, RollModifiersValue } from "@/system/gameTerms";
-import { computed } from "vue";
-import { isComplicationRange } from "@/system/gameTerms";
-
-export interface ResourceIncrementerProps {
-  resource: ResourcesValue | RollModifiersValue;
-}
-const props = defineProps<ResourceIncrementerProps>();
-const model = defineModel<number>({ required: true });
-
-const isComplRange = isComplicationRange(props.resource);
-
-const minDecrement = isComplRange ? 1 : 0;
-const decrementAllowed = computed(() => model.value > minDecrement);
-function decrement() {
-  if (decrementAllowed.value)
-    model.value--;
-}
-
-const maxIncrement = isComplRange ? 5 : 3;
-const incrementAllowed = computed(() => model.value < maxIncrement);
-function increment() {
-  if (incrementAllowed.value)
-    model.value++;
-}
-</script>
-
 <template>
   <div class="readout__entry readout__entry--resource">
     <label class="readout__resource-state-label" :for="`${resource}-resource-state`">
@@ -67,15 +39,47 @@ function increment() {
   </div>
 </template>
 
+<script setup lang="ts">
+import type { ResourcesValue, RollModifiersValue } from "@/system/gameTerms";
+import { computed } from "vue";
+import { isComplicationRange } from "@/system/gameTerms";
+
+export interface ResourceIncrementerProps {
+  resource: ResourcesValue | RollModifiersValue;
+}
+const props = defineProps<ResourceIncrementerProps>();
+const model = defineModel<number>({ required: true });
+
+const isComplRange = isComplicationRange(props.resource);
+
+const minDecrement = isComplRange ? 1 : 0;
+const decrementAllowed = computed(() => model.value > minDecrement);
+function decrement() {
+  if (decrementAllowed.value)
+    model.value--;
+}
+
+const maxIncrement = isComplRange ? 5 : 3;
+const incrementAllowed = computed(() => model.value < maxIncrement);
+function increment() {
+  if (incrementAllowed.value)
+    model.value++;
+}
+</script>
+
 <style scoped lang="scss">
   .readout {
     &__entry--resource {
       grid-template-columns: repeat(3, 1fr);
+
       gap: 2px;
-      grid-column: span 3;
+      width: max-content;
+      justify-items: center;
 
       input[type=number] {
         grid-column: span 1;
+        width: min-content;
+        max-width: 7ch;
 
         &::-webkit-inner-spin-button,
         &::-webkit-outer-spin-button {

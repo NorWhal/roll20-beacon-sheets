@@ -2,7 +2,7 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "lib": [],
-    "types": ["node", "jsdom"],
+    "types": ["node", "jsdom", "vite-svg-loader", "vite/client"],
     "allowJs": true
   },
   "exclude": []

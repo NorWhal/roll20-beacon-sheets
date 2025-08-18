@@ -1,7 +1,7 @@
 import type { Dispatch } from "@roll20-official/beacon-sdk";
-import type { AttributeKey, DepartmentKey } from "@/system/gameTerms";
+import type { AttributeKey, DepartmentKey, RollTypesKey } from "@/system/gameTerms";
 import { defineStore } from "pinia";
-import { computed, reactive, ref, toRaw } from "vue";
+import { computed, reactive, ref } from "vue";
 import { dispatchRef } from "@/relay/relay";
 import { createRollTemplate } from "@/rolltemplates/rolltemplates";
 import { isAttributeKey, isDepartmentKey } from "@/system/gameTerms";
@@ -10,7 +10,6 @@ import { useMetaStore } from "../meta/metaStore";
 import { useStatsStore } from "../statsStore/statsStore";
 
 export interface ActiveStats {
-  baseDice: number;
   attribute?: AttributeKey;
   department?: DepartmentKey;
   determinationDice: number;
@@ -35,17 +34,12 @@ function checkPrepared(stats: ActiveStats): stats is PreparedRollStats {
   return isValid;
 }
 
-export async function reRollAll(props: any) {
-  console.log(`Attempted a Reroll - functionality is work in progress! With props: ${JSON.stringify(props)}`);
-}
-
 export const useRollStore = defineStore("roll", () => {
   const statsStore = useStatsStore();
   const metaStore = useMetaStore();
   const gmStore = useGMStore();
   const activeName = ref("");
   const activeStats = reactive<ActiveStats>({
-    baseDice: 0,
     determinationDice: 0,
     threatDice: 0,
     momentumDice: 0,
@@ -65,12 +59,12 @@ export const useRollStore = defineStore("roll", () => {
   });
 
   const savedRollActive = computed(() => {
+    const savedRoll = savedRolls.get(activeName.value);
+    if (!savedRoll)
+      return false;
     let matches = true;
     for (const property in activeStats) {
-      console.log(activeStats);
-      console.table({ activeStats, saved: toRaw(Object.fromEntries([...savedRolls.entries()])) });
-      console.log(property, activeStats[property], savedRolls.get(property));
-      if (!savedRolls.has(property) || activeStats[property as keyof ActiveStats] !== savedRolls.get(property))
+      if (!(property in savedRoll) || activeStats[property as keyof ActiveStats] !== savedRoll[property as keyof ActiveStats])
         matches = false;
       if (!matches)
         break;
@@ -87,7 +81,6 @@ export const useRollStore = defineStore("roll", () => {
   const clearActiveStats = () => {
     delete activeStats.attribute;
     delete activeStats.department;
-    activeStats.baseDice = 0;
     activeStats.determinationDice = 0;
     activeStats.threatDice = 0;
     activeStats.momentumDice = 0;
@@ -97,51 +90,42 @@ export const useRollStore = defineStore("roll", () => {
 
   const addFocus = async (focus: string) => {
     activeStats.focus = focus;
-    console.log(`Added focus: ${activeStats.focus}`);
   };
   const addDie = async (type?: string) => {
-    const base: number = activeStats.baseDice;
     const determination: number = activeStats.determinationDice;
     const threat: number = activeStats.threatDice;
     const momentum: number = activeStats.momentumDice;
     const availDetermination = statsStore.DETERMINATION;
     const availMomentum = gmStore.resources.momentum;
-    console.log(`Base: ${base}, determination: ${determination}, 
-                threat: ${threat}, momentum: ${momentum}, 
-                five? ${base + determination + threat + momentum < 5}`);
-    if (base + threat + momentum < 5) {
+
+    if (threat + momentum < 3) {
       switch (type) {
         case "determination": {
-          console.log(`Adding determination die`);
           if (determination < availDetermination)
             activeStats.determinationDice++;
-          else console.log(`Not enough determination dice`);
+          else console.error(`Not enough determination dice`);
           break;
         }
         case "momentum": {
-          console.log(`Adding momentum die`);
           if (momentum < availMomentum)
             activeStats.momentumDice++;
-          else console.log(`Not enough momentum dice`);
+          else console.error(`Not enough momentum dice`);
           break;
         }
         case "threat": {
-          console.log(`Adding threat die`);
           activeStats.threatDice++;
           break;
         }
         default: {
-          if (isAttributeKey(String(type))) {
-            console.log(`Adding attribute ${type}`);
+          if (!type) {
+            console.error("No type declared in addDie");
+          }
+          else if (isAttributeKey(type)) {
             activeStats.attribute = type as AttributeKey;
-            activeStats.baseDice = activeStats.department ? 2 : 1;
           }
-          if (isDepartmentKey(String(type))) {
-            console.log(`Adding department ${type}`);
+          else if (isDepartmentKey(type)) {
             activeStats.department = type as DepartmentKey;
-            activeStats.baseDice = activeStats.attribute ? 2 : 1;
           }
-          console.log(`Adding another type of die`);
         }
       }
     }
@@ -229,7 +213,7 @@ export const useRollStore = defineStore("roll", () => {
     };
   };
 
-  const doRoll = async () => {
+  const doRoll = async (rollType: RollTypesKey) => {
     if (!prepared.value)
       return;
     const dispatch: Dispatch = dispatchRef.value;
@@ -243,9 +227,12 @@ export const useRollStore = defineStore("roll", () => {
     const complRange: number = activeStats.complicationRange;
 
     // Setup roll string and roll
+    const baseDice = rollType === "TASK" ? 2 : 1;
     const determination = (activeStats.determinationDice > Number(statsStore.DETERMINATION)) ? Number(statsStore.DETERMINATION) : activeStats.determinationDice;
     console.log(`Determination: ${determination}`);
-    const dice = activeStats.baseDice + activeStats.threatDice + activeStats.momentumDice;
+    const dice = baseDice + activeStats.threatDice + activeStats.momentumDice;
+    console.table({ dice, baseDice, threatDice: activeStats.threatDice, momentumDice: activeStats.momentumDice, targetNumber: targetNumber.value, critRange });
+    console.log(dispatch);
     const { results } = await dispatch.roll({
       rolls: {
         roll: `${dice}d20<${targetNumber.value}cs<${1 + critRange}`,

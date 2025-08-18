@@ -6,3 +6,33 @@
   height:1px;
   overflow:hidden;
 }
+
+@mixin button {
+  border: 1px solid var(--secondary-border-color);
+  border-radius: var(--primary-border-radius);
+  background-color: transparent;
+  color: var(--secondary-text-color);
+  font-family: var(--decorative-font);
+
+  &:hover,
+  &:focus {
+    border-color: var(--primary-border-color)
+  }
+}
+
+@mixin svg-button($size) {
+  @include button;
+  padding: 0;
+  height: #{$size};
+  width: #{$size};
+  svg {
+    fill: var(--secondary-text-color);
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: var(--primary-text-color);
+    }
+  }
+}

@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "types": ["vite-svg-loader", "vite/client"]
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"

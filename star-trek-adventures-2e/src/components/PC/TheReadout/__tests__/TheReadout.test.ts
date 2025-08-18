@@ -130,7 +130,23 @@ describe("theReadout", () => {
 
   describe("save button", () => {
     it("should say save when the active stats don't match a saved roll", () => {
-
+      const rollStore = useRollStore();
+      rollStore.activeStats.department = "CONN";
+      rollStore.activeStats.attribute = "DARING";
+      rollStore.activeStats.baseDice = 2;
+      doRender();
+      screen.getByRole("button", { name: "Save" });
+    });
+    it("should say delete when the active stats match a saved roll", () => {
+      const rollStore = useRollStore();
+      rollStore.activeStats.department = "CONN";
+      rollStore.activeStats.attribute = "DARING";
+      rollStore.activeStats.baseDice = 2;
+      rollStore.activeName = "test-roll";
+      rollStore.saveRoll();
+      doRender();
+      screen.getByRole("button", { name: "Delete Roll" });
+      expect(screen.queryByRole("button", { name: "Save" })).toBeNull();
     });
   });
 });

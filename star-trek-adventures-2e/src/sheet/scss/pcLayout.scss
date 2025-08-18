@@ -28,10 +28,13 @@
     .stat-view,
     .stat-edit {
       grid-column: span 3;
+      overflow: hidden;
 
+      &__label,
       &__base,
       &__total {
-        grid-column: span 2;
+        word-break: break-all;
+        grid-column: span 3;
       }
     }
   }

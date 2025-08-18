@@ -1,10 +1,3 @@
-<script setup lang="ts">
-import ThePCAttributes from "@/components/PC/ThePCAttributes.vue";
-import ThePCDepartments from "@/components/PC/ThePCDepartments.vue";
-import ThePCHeader from "@/components/PC/ThePCHeader.vue";
-import TheReadout from "@/components/PC/TheReadout/TheReadout.vue";
-</script>
-
 <template>
   <ThePCHeader />
   <hr>
@@ -14,6 +7,13 @@ import TheReadout from "@/components/PC/TheReadout/TheReadout.vue";
     <TheReadout />
   </main>
 </template>
+
+<script setup lang="ts">
+import ThePCAttributes from "@/components/PC/ThePCAttributes.vue";
+import ThePCDepartments from "@/components/PC/ThePCDepartments.vue";
+import ThePCHeader from "@/components/PC/ThePCHeader.vue";
+import TheReadout from "@/components/PC/TheReadout/TheReadout.vue";
+</script>
 
 <style lang="scss">
   main {

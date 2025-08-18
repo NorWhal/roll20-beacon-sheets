@@ -1,3 +1,6 @@
+/// <reference types="vite/client" />
+/// <reference types="vite-svg-loader" />
+
 import { fileURLToPath } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import svgLoader from "vite-svg-loader";

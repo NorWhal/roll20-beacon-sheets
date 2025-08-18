@@ -1,3 +1,11 @@
+<template>
+  <StatInterface
+    v-for="(stat, key) in stats"
+    :key
+    :stat="stat"
+  />
+</template>
+
 <script setup lang="ts">
 import type { AttributeKey, DepartmentKey } from "@/system/gameTerms";
 import { computed } from "vue";
@@ -13,20 +21,15 @@ const props = defineProps<StatInterfaceBlockProps>();
 const { statType } = props;
 
 const stats = computed<AttributeKey[] | DepartmentKey[]> (() => {
-  if (statType === "Attribute")
-    return AttributeKeys;
-  else
-    return DepartmentKeys;
+  switch (statType) {
+    case "Attribute":
+      return AttributeKeys;
+    case "Department":
+      return DepartmentKeys;
+  }
+  return [];
 });
 </script>
-
-<template>
-  <StatInterface
-    v-for="(stat, key) in stats"
-    :key
-    :stat="stat"
-  />
-</template>
 
 <style>
 

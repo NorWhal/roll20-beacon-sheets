@@ -1,17 +1,13 @@
 import type { Character, CompendiumDragDropData, Dispatch, Settings, UpdateArgs } from "@roll20-official/beacon-sdk";
 import type { PiniaPluginContext } from "pinia";
 import type { App, Ref } from "vue";
-import {
-
-  initRelay,
-
-} from "@roll20-official/beacon-sdk";
+import { initRelay } from "@roll20-official/beacon-sdk";
 
 import { debounce } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { nextTick, reactive, ref, watch } from "vue";
 import { updateGMResources } from "@/sheet/stores/gmStore/gmStore";
-import { reRollAll } from "@/sheet/stores/rollStore/rollStore";
+import * as actions from "./actions";
 import { gmAttrs } from "./computed/gm";
 import {
   onChange,
@@ -37,34 +33,7 @@ const relayConfig = {
     onTranslationsRequest,
     onDragOver,
   },
-  actions: {
-    /*
-      Handlers for custom actions initiated by interacting with roll templates.
-      See /src/rolltemplates/partials/heroDie.hbs for an example of how an action is performed.
-      This one rolls 1d6, adds the result to a previous roll, and then prints the new result.
-      Check out Marvel Multiverse RPG Edges for a more complex example.
-      ⭐ An important note is that the actions will not have access to any of
-      the Pinia stores, so they need to be passed the necessary data or have
-      access to it through the passed in character object.
-     */
-    reRollAll: {
-      method: async (
-        props: {
-          dispatch: Dispatch;
-          character: Character;
-          messageId?: string;
-          dice?: number;
-        },
-        ...args: string[]
-      ): Promise<void> => {
-        console.log(`In reRollAll function`);
-        console.log(`Reroll function arguments: ${JSON.stringify(args)}`);
-        console.log(`Reroll function props: ${JSON.stringify(props)}`);
-        const [characterName] = args;
-        return reRollAll(props);
-      },
-    },
-  },
+  actions,
   computed: {
     ...gmAttrs(),
   },
@@ -164,6 +133,7 @@ export async function createRelay({
     const store = context.store;
 
     dispatchRef.value = dispatch;
+    console.log("set dispatchRef", dispatchRef.value);
 
     // Init Store
     const { attributes, ...profile } = initValues.character;

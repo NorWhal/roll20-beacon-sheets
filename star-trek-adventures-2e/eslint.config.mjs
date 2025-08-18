@@ -6,4 +6,15 @@ export default antfu({
     quotes: "double",
     semi: true,
   },
+  overrides: {
+    vue: {
+      "vue/block-order": [
+        "error",
+        {
+          order: ["template", "script", "style"],
+        },
+      ],
+      "vue/component-name-in-template-casing": ["error", "PascalCase"],
+    },
+  },
 });

@@ -2,7 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.node.json",
   "compilerOptions": {
     "target": "ES2022",
-    "types": ["node"]
+    "types": ["node", "vite-svg-loader", "vite/client"]
   },
   "include": [
     "vite.config.*",

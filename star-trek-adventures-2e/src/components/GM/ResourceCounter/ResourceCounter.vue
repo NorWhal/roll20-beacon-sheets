@@ -1,3 +1,31 @@
+<template>
+  <div
+    class="resource-counter"
+    data-testid="resource-counter"
+  >
+    <label
+      class="resource-counter__label"
+      :for="id ?? label"
+    > {{ label }}</label>
+    <button
+      class="resource-counter__button resource-counter__button--subtract"
+      aria-label="subtract"
+      @click="decrement"
+    />
+    <input
+      :id="id ?? label"
+      v-model="model"
+      class="resource-counter__input"
+      type="number"
+    >
+    <button
+      class="resource-counter__button resource-counter__button--add"
+      aria-label="add"
+      @click="increment"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from "vue";
 
@@ -28,34 +56,6 @@ function decrement() {
   emit("update:modelValue", { key: "value", value: model.value - 1 });
 }
 </script>
-
-<template>
-  <div
-    class="resource-counter"
-    data-testid="resource-counter"
-  >
-    <label
-      class="resource-counter__label"
-      :for="id ?? label"
-    > {{ label }}</label>
-    <button
-      class="resource-counter__button resource-counter__button--subtract"
-      aria-label="subtract"
-      @click="decrement"
-    />
-    <input
-      :id="id ?? label"
-      v-model="model"
-      class="resource-counter__input"
-      type="number"
-    >
-    <button
-      class="resource-counter__button resource-counter__button--add"
-      aria-label="add"
-      @click="increment"
-    />
-  </div>
-</template>
 
 <style scoped lang="scss">
   @use "@/common/scss/common.scss";

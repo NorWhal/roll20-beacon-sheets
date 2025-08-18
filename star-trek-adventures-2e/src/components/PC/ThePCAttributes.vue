@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import { computed } from "vue";
-import { useUIStore } from "@/sheet/stores/uiStore/uiStore";
-import StatInterfaceBlock from "./StatInterface/StatInterfaceBlock.vue";
-
-const uiStore = useUIStore();
-const editMode = computed(() => uiStore.editMode ? "edit" : "view");
-</script>
-
 <template>
   <section
     class="stats-section attributes-section"
@@ -16,6 +7,15 @@ const editMode = computed(() => uiStore.editMode ? "edit" : "view");
     <StatInterfaceBlock stat-type="Attribute" />
   </section>
 </template>
+
+<script setup lang="ts">
+import { computed } from "vue";
+import { useUIStore } from "@/sheet/stores/uiStore/uiStore";
+import StatInterfaceBlock from "./StatInterface/StatInterfaceBlock.vue";
+
+const uiStore = useUIStore();
+const editMode = computed(() => uiStore.editMode ? "edit" : "view");
+</script>
 
 <style lang="scss">
   .attributes-section {
