@@ -272,7 +272,7 @@ function deleteSavedRoll() {
     &__modifiers {
       grid-column: 1/-1;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       width: 100%;
       justify-content: space-between;
       gap: var(--primary-gap);

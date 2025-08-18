@@ -20,5 +20,21 @@ const editMode = computed(() => uiStore.editMode ? "edit" : "view");
 <style lang="scss">
   .attributes-section {
     background-color: var(--secondary-background-color);
+    grid-template-areas:
+      "attrHeader attrHeader attrHeader attrHeader attrHeader attrHeader"
+      "control control presence presence insight insight"
+      "fitness fitness daring daring reason reason";
+    &__header {
+      grid-area: attrHeader
+    }
+  }
+  @media (max-width: 700px) {
+    .attributes-section {
+      grid-template-areas:
+        "attrHeader attrHeader attrHeader attrHeader attrHeader attrHeader"
+        "control control control fitness fitness fitness"
+        "presence presence presence daring daring daring"
+        "insight insight insight reason reason reason";
+    }
   }
 </style>

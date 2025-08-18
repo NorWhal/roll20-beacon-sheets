@@ -169,6 +169,7 @@ const { floatingStyles } = useFloating(reference, floating, {
 <style lang="scss">
 @use '../../../common/scss/common.scss';
 @use '../../../common/scss/vars.scss';
+@use "../../../sheet/scss/generics.scss" as generics;
 
 .modifiers-display {
   padding: 8px;
@@ -196,6 +197,7 @@ const { floatingStyles } = useFloating(reference, floating, {
   }
 
   &__label {
+    @include generics.nowrap-label;
     text-transform: uppercase;
     color: var(--primary-text-color);
   }
@@ -227,10 +229,17 @@ const { floatingStyles } = useFloating(reference, floating, {
     }
   }
 
-  $departments: "command", "conn", "engineering", "security", "medicine", "science";
+  $attributes: "control", "fitness", "presence", "daring", "insight", "reason";
+  @each $attr in $attributes {
+    &--#{$attr} {
+      grid-area: #{$attr}
+    }
+  }
 
+  $departments: "command", "conn", "engineering", "security", "medicine", "science";
   @each $dept in $departments {
     &--#{$dept} {
+      grid-area: #{$dept};
       border-color: var(--#{$dept});
       color: var(--#{$dept});
 

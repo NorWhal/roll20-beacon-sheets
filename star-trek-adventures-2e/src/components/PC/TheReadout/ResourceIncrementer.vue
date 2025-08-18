@@ -68,18 +68,18 @@ function increment() {
 </script>
 
 <style scoped lang="scss">
+  @use "../../../sheet/scss/generics.scss" as generics;
   .readout {
     &__entry--resource {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: min-content 1fr 1fr min-content;
 
       gap: 2px;
       width: max-content;
       justify-items: center;
 
       input[type=number] {
-        grid-column: span 1;
-        width: min-content;
-        max-width: 7ch;
+        grid-column: span 2;
+        width: 100%;
 
         &::-webkit-inner-spin-button,
         &::-webkit-outer-spin-button {
@@ -94,8 +94,8 @@ function increment() {
       }
     }
     &__resource-state-label {
-      grid-column: span 3;
-      text-transform: capitalize;
+      @include generics.nowrap-label;
+      grid-column: span 4;
     }
     &__resource-button {
       display: flex;
@@ -107,6 +107,20 @@ function increment() {
 
       &:disabled {
         cursor: not-allowed;
+      }
+    }
+  }
+  @media (max-width: 420px) {
+    .readout{
+      &__entry--resource {
+        input[type=number] {
+          grid-column: 1/-1;
+          grid-row: 2;
+        }
+      }
+      &__resource-button {
+        grid-column: span 2;
+        width: 100%
       }
     }
   }
