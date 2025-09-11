@@ -23,7 +23,10 @@
       justify-items: center;
 
       li {
-        font-size: 1.25rem;
+        display: flex;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        height: 1.5rem;
         grid-column: span 2;
         &:nth-child(5n-4) {
           grid-column: 2 / span 2;
@@ -37,6 +40,35 @@
         }
 
         filter: brightness(125%)contrast(150%);
+      }
+    }
+
+    &__discarded-dice {
+      display: flex;
+      flex-direction: column;
+      height: max-content;
+
+      .roll__discarded-die {
+        font-size: 0.5rem;
+        line-height: 0.5rem;
+        padding: 0 2px;
+        text-decoration: line-through;
+        cursor: default;
+        transition: all 0.5s;
+        width: 100%;
+      }
+
+      &:hover {
+        .roll__discarded-die {
+          font-size: 0.25rem;
+          line-height: 0.25rem;
+
+          &:hover {
+            font-size: 1rem;
+            line-height: 1rem;
+            text-decoration: none;
+          }
+        }
       }
     }
   }

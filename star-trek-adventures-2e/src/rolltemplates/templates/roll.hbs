@@ -1,4 +1,4 @@
-{{#> postWrapper type="roll" characterName=characterName bottomBarValues=bottomBarValues rollTitle=rollTitle rollResult=rollResult critlevel=critlevel}}
+{{#> postWrapper type="roll" characterName=characterName bottomBarValues=bottomBarValues rollTitle=rollTitle rollResult=rollResult stringifiedResult=stringifiedResult critlevel=critlevel}}
   <div class="roll">
     {{!-- <ul class="roll__dice-results">
       {{#each dice}}
@@ -8,7 +8,18 @@
     {{!-- <ul><li>{{critlevel}}</li></ul> --}}
     <ul class="roll__dice-results">
       {{#each rollResult}}
-        <li class="{{this.class}}" title="{{this.class}}">{{this.roll}}</li>
+        <li class="{{this.class}}" title="{{this.class}}" aria-label="results">
+          <div class="roll__die-result">
+            {{this.roll}}
+          </div>
+          {{#if this.discards}}
+            <ul class="roll__discarded-dice" aria-label="re-roll discards">
+              {{#each this.discards}}
+                <li class="roll__discarded-die">{{this}}</li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        </li>
       {{/each}}
     </ul>   
   </div>

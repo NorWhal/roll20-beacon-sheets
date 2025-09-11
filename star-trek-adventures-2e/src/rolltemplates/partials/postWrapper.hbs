@@ -18,7 +18,16 @@
     <ul class="lcars__bottom-sidebar">
       <div class="lcars__sidebar-spacer"></div>
       {{#each bottomBarValues}}
-        <li>{{this}}</li>
+        {{#if this.action}}
+          <li>
+            {{> rollAction action=this.action classes="lcars__bottom-sidebar-item lcars__bottom-sidebar-item--button" stringifiedResult=../stringifiedResult}}
+          </li>
+        {{/if}}
+        {{#if this.content}}
+          <li>
+            <span class="lcars__bottom-sidebar-item"> {{this.content}} </span>
+          </li>
+        {{/if}}
       {{/each}}
     </ul>
     <div class="lcars__bottom-overbar">

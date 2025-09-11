@@ -96,7 +96,7 @@ describe("theReadout", () => {
     rollStore.activeStats.attribute = "DARING";
     rollStore.activeStats.focus = "Warp Field Mechanics";
     doRender();
-    await userEvent.click(screen.getByRole("button", { name: "Clear" }));
+    await userEvent.click(screen.getByRole("button", { name: "Clear Task" }));
     expect(rollStore.activeStats).toEqual(
       expect.not.objectContaining({
         department: expect.anything(),
@@ -121,7 +121,6 @@ describe("theReadout", () => {
     const rollStore = useRollStore();
     rollStore.activeStats.department = "CONN";
     rollStore.activeStats.attribute = "DARING";
-    rollStore.activeStats.baseDice = 2;
     doRender();
     mocks.dispatchRef.value.roll.mockResolvedValueOnce(fakeRollResult);
     await userEvent.click(screen.getByRole("button", { name: "Roll" }));
@@ -133,7 +132,6 @@ describe("theReadout", () => {
       const rollStore = useRollStore();
       rollStore.activeStats.department = "CONN";
       rollStore.activeStats.attribute = "DARING";
-      rollStore.activeStats.baseDice = 2;
       doRender();
       screen.getByRole("button", { name: "Save" });
     });
@@ -141,7 +139,6 @@ describe("theReadout", () => {
       const rollStore = useRollStore();
       rollStore.activeStats.department = "CONN";
       rollStore.activeStats.attribute = "DARING";
-      rollStore.activeStats.baseDice = 2;
       rollStore.activeName = "test-roll";
       rollStore.saveRoll();
       doRender();

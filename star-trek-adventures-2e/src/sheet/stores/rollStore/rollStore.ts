@@ -1,4 +1,5 @@
 import type { Dispatch } from "@roll20-official/beacon-sdk";
+import type { BarValue } from "@/rolltemplates/rolltemplates";
 import type { AttributeKey, DepartmentKey, RollTypesKey } from "@/system/gameTerms";
 import { defineStore } from "pinia";
 import { computed, reactive, ref } from "vue";
@@ -137,6 +138,8 @@ export const useRollStore = defineStore("roll", () => {
   interface RollResult {
     /** The actual result */
     roll: number;
+    /** Discarded rolls from determination rerolls */
+    discards?: number[];
     /** Whether the template should display the result as a crit-success/fumble */
     class: RollClass;
   }
@@ -197,6 +200,7 @@ export const useRollStore = defineStore("roll", () => {
 
       results.push({
         roll,
+        discards: [14, 12],
         class: critClass,
       });
     });
@@ -239,11 +243,22 @@ export const useRollStore = defineStore("roll", () => {
       },
     });
 
-    const { rollResult, successes, complications } = parseRollResults({ dice: results.roll.results.dice, critRange, complicationRange: complRange, target, determinationDice: determination });
+    const { rollResult, successes, complications } = parseRollResults({
+      dice: results.roll.results.dice,
+      critRange,
+      complicationRange: complRange,
+      target,
+      determinationDice: determination,
+    });
     // console.log(`Roll result array: ${JSON.stringify(rollResult)}`)
 
     // Create rolltemplate
-    const bottomBarValues = [`${dice}d20 ≤ ${target}`, `Successes: ${successes}`, `Complications: ${complications}`];
+    const bottomBarValues: BarValue[] = [
+      { type: "text", content: `${dice}d20 ≤ ${target}` },
+      { type: "text", content: `Successes: ${successes}` },
+      { type: "text", content: `Complications: ${complications}` },
+      { type: "action", action: "reroll" },
+    ];
     if (focusApplied)
       bottomBarValues.unshift(activeStats.focus);
     console.log(`Roll results: ${JSON.stringify(results)}`);
@@ -258,6 +273,7 @@ export const useRollStore = defineStore("roll", () => {
         critRange,
         // complRange: complRange,
         rollResult,
+        stringifiedResult: JSON.stringify(rollResult),
         characterName: metaStore.name,
       },
     });

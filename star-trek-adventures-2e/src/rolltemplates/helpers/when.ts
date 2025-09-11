@@ -16,7 +16,6 @@ export function when(operand_1: string, operator: string, operand_2: string) {
    else  return options.inverse(this); */
   const operand_l: number = Number.parseInt(operand_1);
   const operand_r: number = Number.parseInt(operand_2);
-  console.log(`left ${operand_l} ${typeof operand_l} and right  ${operand_r} ${typeof operand_r}`);
   switch (operator) {
     case ("eq") : return operand_l === operand_r;
     case ("noteq") : return operand_l !== operand_r;
