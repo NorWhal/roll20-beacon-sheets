@@ -1,8 +1,9 @@
 import type { Dispatch } from "@roll20-official/beacon-sdk";
-import type { BarValue } from "@/rolltemplates/rolltemplates";
+import type { BarValue, RollPost } from "@/rolltemplates/rolltemplates";
 import type { AttributeKey, DepartmentKey, RollTypesKey } from "@/system/gameTerms";
 import { defineStore } from "pinia";
 import { computed, reactive, ref } from "vue";
+import { r20ify } from "@/relay/helpers/actionHelpers";
 import { dispatchRef } from "@/relay/relay";
 import { createRollTemplate } from "@/rolltemplates/rolltemplates";
 import { isAttributeKey, isDepartmentKey } from "@/system/gameTerms";
@@ -142,6 +143,10 @@ export const useRollStore = defineStore("roll", () => {
     discards?: number[];
     /** Whether the template should display the result as a crit-success/fumble */
     class: RollClass;
+    /** Whether the individual roll is __currently__ rerollable */
+    rerollable?: boolean;
+    /** stringified parameters of the whole roll, necessary for reroll */
+    stringifiedParams?: string;
   }
 
   interface RollParseContext {
@@ -257,26 +262,41 @@ export const useRollStore = defineStore("roll", () => {
       { type: "text", content: `${dice}d20 ≤ ${target}` },
       { type: "text", content: `Successes: ${successes}` },
       { type: "text", content: `Complications: ${complications}` },
-      { type: "action", action: "reroll" },
+      { type: "action", action: "reroll", content: "Reroll" },
     ];
+
     if (focusApplied)
       bottomBarValues.unshift(activeStats.focus);
-    console.log(`Roll results: ${JSON.stringify(results)}`);
+    console.log(`Roll results:`, results);
+    const templateParams: Omit<RollPost["parameters"], "stringifiedParams"> = {
+      characterId: metaStore.id,
+      ...activeStats,
+      rollTitle: `${activeStats.attribute} + ${activeStats.department}`,
+      bottomBarValues,
+      dice: results.roll.results.dice,
+      critRange,
+      // complRange: complRange,
+      rollResult,
+      characterName: metaStore.name,
+    };
+    rollResult.forEach((result, index) => {
+      result.rerollable = true;
+      result.stringifiedParams = JSON.stringify({
+        ...templateParams,
+        index,
+      });
+    });
     const content = createRollTemplate({
       type: "roll",
       parameters: {
-        characterId: metaStore.id,
-        ...activeStats,
-        rollTitle: `${activeStats.attribute} + ${activeStats.department}`,
-        bottomBarValues,
-        dice: results.roll.results.dice,
-        critRange,
-        // complRange: complRange,
-        rollResult,
-        stringifiedResult: JSON.stringify(rollResult),
-        characterName: metaStore.name,
+        ...templateParams,
+        stringifiedParams: r20ify({
+          templateParams,
+          rollResult,
+        }),
       },
     });
+    console.log(content);
 
     // Reduce the Determination and Increase Threat
     statsStore.conditionsFields.DETERMINATION.base = statsStore.DETERMINATION - determination;
@@ -284,7 +304,7 @@ export const useRollStore = defineStore("roll", () => {
 
     // Post the rolltemplate to chat
     // console.log(`Roll content: ${JSON.stringify(content)}`);
-    dispatch.post({
+    dispatch.postRaw({
       content,
     });
   };
@@ -292,7 +312,7 @@ export const useRollStore = defineStore("roll", () => {
   const handleSavedRollClick = (clickedRollName: string) => {
     const clickedRoll = savedRolls.get(clickedRollName);
     if (activeName.value === clickedRollName && savedRollActive.value) {
-      doRoll();
+      doRoll("TASK");
       return;
     }
     activeName.value = clickedRollName;

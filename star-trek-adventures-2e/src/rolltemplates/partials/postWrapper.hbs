@@ -20,14 +20,16 @@
       {{#each bottomBarValues}}
         {{#if this.action}}
           <li>
-            {{> rollAction action=this.action classes="lcars__bottom-sidebar-item lcars__bottom-sidebar-item--button" stringifiedResult=../stringifiedResult}}
+            {{#> rollAction action=this.action classes="lcars__sidebar-item lcars__sidebar-item--button" stringifiedParams=../stringifiedParams}}
+              {{this.content}}
+            {{/ rollAction}}
           </li>
         {{/if}}
-        {{#if this.content}}
+        {{#unless this.action}}
           <li>
-            <span class="lcars__bottom-sidebar-item"> {{this.content}} </span>
+            <span class="lcars__sidebar-item"> {{this.content}} </span>
           </li>
-        {{/if}}
+        {{/unless}}
       {{/each}}
     </ul>
     <div class="lcars__bottom-overbar">

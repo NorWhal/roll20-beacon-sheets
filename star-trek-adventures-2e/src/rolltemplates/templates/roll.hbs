@@ -9,16 +9,23 @@
     <ul class="roll__dice-results">
       {{#each rollResult}}
         <li class="{{this.class}}" title="{{this.class}}" aria-label="results">
-          <div class="roll__die-result">
-            {{this.roll}}
-          </div>
-          {{#if this.discards}}
-            <ul class="roll__discarded-dice" aria-label="re-roll discards">
-              {{#each this.discards}}
-                <li class="roll__discarded-die">{{this}}</li>
-              {{/each}}
-            </ul>
+          {{#if this.rerollable}}
+            {{#> rollAction action="reRollDie" class="roll__die-result" stringifiedParams=this.stringifiedParams}}
+              {{this.roll}}
+            {{/ rollAction}}
           {{/if}}
+          {{#unless this.rerollable}}
+            <div class="roll__die-result">
+              {{this.roll}}
+            </div>
+            {{#if this.discards}}
+              <ul class="roll__discarded-dice" aria-label="re-roll discards">
+                {{#each this.discards}}
+                  <li class="roll__discarded-die">{{this}}</li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          {{/unless}}
         </li>
       {{/each}}
     </ul>   

@@ -1,6 +1,7 @@
 import type { Character, Dispatch } from "@roll20-official/beacon-sdk";
+import { r20Parse } from "../helpers/actionHelpers";
 
-export const startReRoll = {
+export const reroll = {
   method: async (
     props: {
       dispatch: Dispatch;
@@ -10,16 +11,25 @@ export const startReRoll = {
     },
     ...args: string[]
   ): Promise<void> => {
+    console.log(args);
     console.log(`In reRollAll function`);
-    console.log(`Reroll function arguments:`, args);
-    const [diceString] = args;
-    const dice = diceString.split(",");
-    const checkboxes = dice.map((die, index) => `<div class="form-check"><input type="checkbox" class="form-check-input" id="die-${index}>"<label class="form-check-label" for="die-${index}">${die}</label></div>`).join("\n");
-    const queryResults = await props.dispatch.query({
-      options: {
-        title: "ReRoll",
-        html: checkboxes,
-      },
-    });
+    console.log(`Reroll function arguments:`, r20Parse(args.join("")));
   },
+  description: "starts a determination reroll",
+};
+
+export const reRollDie = {
+  method: async (
+    props: {
+      dispatch: Dispatch;
+      character: Character;
+      messageId?: string;
+      dice?: number;
+    },
+    ...args: string[]
+  ) => {
+    console.log("in reRollDie function");
+    console.log("reRollDie function arguments");
+  },
+  description: "rerolls an individual die for a determination reroll",
 };

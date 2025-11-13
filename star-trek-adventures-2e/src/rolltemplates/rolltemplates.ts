@@ -11,7 +11,8 @@ export type BarValue = {
   content: string;
 } | {
   type: "action";
-  action: "reroll";
+  action: "startReRoll";
+  content: string;
 };
 
 Handlebars.registerPartial("postWrapper", postWrapper);
@@ -33,14 +34,14 @@ interface CommonParams {
   characterId: string;
 }
 
-interface RollPost {
+export interface RollPost {
   type: "roll";
   parameters: CommonParams & {
     rollTitle: string;
     bottomBarValues: BarValue[];
     dice?: number[];
     rollResult?: any;
-    stringifiedResult: string;
+    stringifiedParams: string;
     critRange?: number;
     complianceRange?: number;
   };
@@ -49,7 +50,6 @@ interface RollPost {
 type AnyPostTemplate = RollPost;
 
 export function createRollTemplate({ type, parameters }: AnyPostTemplate) {
-  console.log(`Printing roll template parameters: ${JSON.stringify(parameters)}`);
   const template = postTemplates[type];
   const postTemplate = template({
     ...parameters,

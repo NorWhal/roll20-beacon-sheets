@@ -18,6 +18,8 @@ import {
   onTranslationsRequest,
 } from "./handlers/handlers";
 
+console.log(actions);
+
 /*
 This is the configuration for the relay. It defines the handlers and actions that the sheet will use.
 The handlers are functions that are called by the relay when certain events occur.
@@ -125,7 +127,6 @@ export async function createRelay({
   primaryStore = "StarTrek",
   logMode = false,
 }) {
-  // @ts-ignore
   const dispatch = await (devMode ? devRelay() : initRelay(relayConfig));
   const relayPinia = async (context: PiniaPluginContext) => {
     if (context.store.$id !== primaryStore)
